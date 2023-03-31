@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">datingforballsports</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="layout_m_text_1">账号</string>
+    <string name="layout_m_text_2">密码</string>
+    <string name="layout_m_text_3">Name</string>
+    <string name="layout_m_text_4">Password</string>
+    <string name="layout_m_button_1">登录</string>
+    <string name="layout_m_button_2">注册</string>
+
+    <string name="layout_register_text1_1">用户名</string>
+    <string name="layout_register_text1_2">密码</string>
+    <string name="layout_register_text1_3">再次输入密码</string>
+    <string name="layout_register_text1_4">性别</string>
+    <string name="layout_register_text1_5">生日</string>
+    <string name="layout_register_text1_6">邮箱</string>
+    <string name="layout_register_text1_7">手机号</string>
+    <string name="layout_register_button_1">注册</string>
+    <string name="layout_register_button_2">清空</string>
+    <string name="layout_register_radioButton_1">男</string>
+    <string name="layout_register_radioButton_2">女</string>
+</resources>
