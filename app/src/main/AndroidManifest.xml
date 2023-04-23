@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="gdut.edu.datingforballsports">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,15 +24,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Datingforballsports"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".view.activity.PublishPostActivity"
+            android:exported="false" />
         <activity
             android:name=".view.activity.RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.activity.ForumListActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true"
@@ -40,7 +44,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F3F3"
+    tools:context=".view.activity.PublishPostActivity">
+
+    <GridLayout
+        android:id="@+id/publish_post_gridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.053">
+
+<!--        <ImageView
+            android:id="@+id/show_publish_post_image1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true" />
+
+        <ImageView
+            android:id="@+id/show_publish_post_image2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true" />
+
+        <ImageView
+            android:id="@+id/show_publish_post_image3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:adjustViewBounds="true" />-->
+    </GridLayout>
+
+    <ImageView
+        android:id="@+id/publish_post_publish_photo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:background="#FFFFFF"
+        android:src="@android:drawable/ic_menu_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.051" />
+
+    <EditText
+        android:id="@+id/publish_post_content"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:background="@android:drawable/edit_text"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:minLines="8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.618" />
+
+
+    <Button
+        android:id="@+id/publish_post_contain_publish_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/layout_publish_post_contain_publish_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.971" />
+</androidx.constraintlayout.widget.ConstraintLayout>

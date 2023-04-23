@@ -1,17 +1,13 @@
 package gdut.edu.datingforballsports.presenter;
 
-import android.app.AlertDialog;
-import android.widget.Toast;
-
 import java.lang.ref.WeakReference;
 
 import gdut.edu.datingforballsports.domain.User;
-import gdut.edu.datingforballsports.model.Lisentener.RegisterListener;
+import gdut.edu.datingforballsports.model.Listener.RegisterListener;
 import gdut.edu.datingforballsports.model.RegisterModel;
-import gdut.edu.datingforballsports.util.EmailUtil;
+import gdut.edu.datingforballsports.util.EmailUtils;
 import gdut.edu.datingforballsports.view.RegisterView;
 import gdut.edu.datingforballsports.view.View_;
-import gdut.edu.datingforballsports.view.activity.RegisterActivity;
 
 public class RegisterPresenter extends BasePresenter {
     public RegisterPresenter(RegisterView registerView) {
@@ -22,7 +18,7 @@ public class RegisterPresenter extends BasePresenter {
     public void register() {
         if (this.model != null && this.viewReference != null && this.viewReference.get() != null) {
             RegisterView registerView = (RegisterView) viewReference.get();
-            if (EmailUtil.isEmail(registerView.getEmail().trim()) && registerView.getEmail().trim().length() <= 31) {
+            if (EmailUtils.isEmail(registerView.getEmail().trim()) && registerView.getEmail().trim().length() <= 31) {
                 if (registerView.getPassword().equals(registerView.getPasswordAG())
                         && !registerView.getUserName().equals("") && !registerView.getPassword().equals("")
                         && registerView.getSex().equals("") && !registerView.getBirthday().equals("")

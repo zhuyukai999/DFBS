@@ -1,7 +1,7 @@
 package gdut.edu.datingforballsports.model;
 
 import gdut.edu.datingforballsports.domain.User;
-import gdut.edu.datingforballsports.model.Lisentener.RegisterListener;
+import gdut.edu.datingforballsports.model.Listener.RegisterListener;
 
 public class RegisterModel implements Model_ {
     //TODO

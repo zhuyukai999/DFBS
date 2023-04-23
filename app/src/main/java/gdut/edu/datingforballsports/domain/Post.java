@@ -1,24 +1,36 @@
 package gdut.edu.datingforballsports.domain;
 
+import java.util.Date;
+import java.util.List;
+
 public class Post
 {
+    private int id;
     private int publisherId;
-    private int postId;
-    private String text;
-    private String topic;
-    private String imageUrl;
+    private String content;
     private int likeNum;
-    private int collectionNum;
     private int commentNum;
+    private Date createTime;
+    private List<String> imagePaths;
 
-    public Post(int publisherId, int postId, String text, String topic, int likeNum, int collectionNum, int commentNum) {
+    public Post() {
+    }
+
+    public Post(int publisherId, String content, int likeNum, int commentNum, Date createTime, List<String> imagePaths) {
         this.publisherId = publisherId;
-        this.postId = postId;
-        this.text = text;
-        this.topic = topic;
+        this.content = content;
         this.likeNum = likeNum;
-        this.collectionNum = collectionNum;
         this.commentNum = commentNum;
+        this.createTime = createTime;
+        this.imagePaths = imagePaths;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getPublisherId() {
@@ -29,36 +41,12 @@ public class Post
         this.publisherId = publisherId;
     }
 
-    public int getPostId() {
-        return postId;
+    public String getContent() {
+        return content;
     }
 
-    public void setPostId(int postId) {
-        this.postId = postId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getLikeNum() {
@@ -69,19 +57,28 @@ public class Post
         this.likeNum = likeNum;
     }
 
-    public int getCollectionNum() {
-        return collectionNum;
-    }
-
-    public void setCollectionNum(int collectionNum) {
-        this.collectionNum = collectionNum;
-    }
-
     public int getCommentNum() {
         return commentNum;
     }
 
     public void setCommentNum(int commentNum) {
         this.commentNum = commentNum;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+
+    public List<String> getImagePaths() {
+        return imagePaths;
+    }
+
+    public void setImagePaths(List<String> imagePaths) {
+        this.imagePaths = imagePaths;
     }
 }

@@ -25,4 +25,6 @@
     <string name="layout_register_button_2">清空</string>
     <string name="layout_register_radioButton_1">男</string>
     <string name="layout_register_radioButton_2">女</string>
+
+    <string name="layout_publish_post_contain_publish_button">发布</string>
 </resources>

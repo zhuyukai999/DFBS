@@ -1,47 +1,84 @@
 package gdut.edu.datingforballsports.view.adapter;
 
-import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import gdut.edu.datingforballsports.R;
-import gdut.edu.datingforballsports.view.viewholder.ViewHolder;
+import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
 
-public abstract class CommonAdapter<T> extends BaseAdapter {
-    private Context context;
-    private List<T> list;
 
-    public CommonAdapter(Context context, List<T> list) {
-        this.context = context;
-        this.list = list;
+public class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHolder> {
+
+    private final List<T> mList;
+
+    private OnBindDataListener<T> onBindDataListener;
+    private OnMoreBindDataListener<T> onMoreBindDataListener;
+
+    // 单类型
+    public CommonAdapter(List<T> mList, OnBindDataListener<T> onBindDataListener) {
+        this.mList = mList;
+        this.onBindDataListener = onBindDataListener;
+    }
+
+    // 多类型
+    public CommonAdapter(List<T> mList, OnMoreBindDataListener<T> onMoreBindDataListener) {
+        this.mList = mList;
+        this.onBindDataListener = onMoreBindDataListener;
+        this.onMoreBindDataListener = onMoreBindDataListener;
+    }
+
+    //绑定数据
+    public interface OnBindDataListener<T> {
+        void onBindViewHolder(T model, CommonViewHolder viewHolder, int type, int position);
+
+        int getLayoutId(int type);
+    }
+
+    //绑定多类型的数据
+    public interface OnMoreBindDataListener<T> extends OnBindDataListener<T> {
+        int getItemType(int position);
     }
 
     @Override
-    public int getCount() {
-        return list == null ? 0 : list.size();
+    public int getItemViewType(int position) {
+        if (onMoreBindDataListener != null) {
+            return onMoreBindDataListener.getItemType(position);
+        }
+        return 0;
     }
 
     @Override
-    public T getItem(int position) {
-        return list.get(position);
+    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId = onBindDataListener.getLayoutId(viewType);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        return CommonViewHolder.getCommonViewHolder(parent.getContext(), view);
+    }
+
+    //根据图片数量进行Item选择
+    @Override
+    public void onBindViewHolder(CommonViewHolder holder, int position) {
+        onBindDataListener.onBindViewHolder(mList.get(position), holder, getItemViewType(position), position);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
     }
 
-    //TODO
-    //感觉这里太耦合了啊，就是这个R.layout.forum_item
-    @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        ViewHolder holder = ViewHolder.get(view, viewGroup, R.layout.forum_item, position);
-        convert(holder, getItem(position));
-        return holder.getConvertView();
+    // 插入一项数据
+    public void insert(T item, int position) {
+        mList.add(position, item);
+        notifyItemInserted(position);
     }
 
-    public abstract void convert(ViewHolder holder, T item);
+    // 删除一项数据
+    public void remove(int position) {
+        mList.remove(position);
+        notifyItemRemoved(position);
+    }
 }
+
