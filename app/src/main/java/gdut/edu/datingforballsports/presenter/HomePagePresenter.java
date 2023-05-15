@@ -34,24 +34,4 @@ public class HomePagePresenter extends BasePresenter {
             }
         });
     }
-
-    public void getList(int userId, String token) {
-        ThreadUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-                ((HomePageModel) model).getUserDynamicByUserIdAndToken(userId, token, new HomePageListener() {
-
-                    @Override
-                    public void onSuccess(Object object) {
-                        ((HomePageView) viewReference.get()).onLoadUserDynamicSuccess(object);
-                    }
-
-                    @Override
-                    public void onFails(String msg) {
-                        ((HomePageView) viewReference.get()).onLoadFails(msg);
-                    }
-                });
-            }
-        });
-    }
 }

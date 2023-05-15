@@ -5,21 +5,41 @@
       <map>
         <entry key="..\:/SoftWare/android_SDK/platforms/android-32/data/res/drawable/edit_text.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/administrator_message_list.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/chatroom_member_item.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/comment_bt_selector.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/comment_dialog_et_selector.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/forum_button.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/homepage_button.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/like_button.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/match_button.xml" value="0.1815" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/drawable/message_button.xml" value="0.1815" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_activity_main.xml" value="0.264" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_activity_main_2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_comment_dialog_layout.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_comment_item_layout.xml" value="0.1" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_comment_reply_item_layout.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_post_item.xml" value="0.264" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_post_item2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_post_item_1.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/a_post_item_2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/account_setting.xml" value="0.264" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/activity_publish_post.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/administrator_message_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/administrator_message_list.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/button_layout.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/button_layout_main.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/chat.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/chat_interface.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/chat_msg_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/chatroom_edit.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/chatroom_member_item.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/comment_details.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/comment_item.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/cover.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/edit_post.xml" value="0.264" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/footer.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/forum.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/forum_details.xml" value="0.25364583333333335" />
@@ -30,6 +50,8 @@
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/forum_item_image3.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/forum_list.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/friend_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/friend_item_1.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/friend_item_2.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/friend_list.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/header.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/homepage.xml" value="0.25364583333333335" />
@@ -37,10 +59,32 @@
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/homepage_header.xml" value="0.264" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/login.xml" value="0.264" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/matching.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/matching_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/matching_item_1.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/matching_item_2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_and_friend_list.xml" value="0.1" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_item.xml" value="0.1891891891891892" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_item_1.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_item_2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_item_administrator.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_list.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_list_administrator.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_require_friend_list.xml" value="0.18421052631578946" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/message_require_list.xml" value="0.264" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/new_match_room.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/post_details.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/publish_post.xml" value="0.25364583333333335" />
-        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/register.xml" value="0.264" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_item_1.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_item_2.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_item_3.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_item_4.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/record_list.xml" value="0.25364583333333335" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/register.xml" value="0.25364583333333335" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/registration.xml" value="0.264" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/layout/trends_list.xml" value="0.264" />
         <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/menu/menu_main.xml" value="0.1" />
+        <entry key="..\:/javawa/Code/allSchoolCode/Android_Homework/datingforballsports/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1815" />
       </map>
     </option>
   </component>

@@ -31,7 +31,7 @@ public class BlankFragment extends Fragment {
             mTextString = getArguments().getString(ARG_TEXT);
         }
     }
-    @Override
+/*    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null){
@@ -43,5 +43,5 @@ public class BlankFragment extends Fragment {
     private void InitView() {
         TextView textView = rootView.findViewById(R.id.text);
         textView.setText(mTextString);
-    }
+    }*/
 }

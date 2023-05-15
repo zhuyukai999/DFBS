@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/message_list_buttonT"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="#FFF0F0"
+            android:gravity="center"
+            android:text="信息"
+            android:textColor="#5B595A"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/friend_list_buttonT"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="#FFF0F0"
+            android:gravity="center"
+            android:text="好友"
+            android:textColor="#5B595A"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+<!--    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/friend_list_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />-->
+
+<!--    <include layout="@layout/message_item_1"/>
+    <include layout="@layout/message_item_2"/>-->
+
+    <include layout="@layout/friend_list"/>
+</LinearLayout>

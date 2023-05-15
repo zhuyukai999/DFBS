@@ -3,15 +3,17 @@ package gdut.edu.datingforballsports.domain;
 public class User {
     private String userName;
     private String password;
+    private String icon;
     private String sex;
     private String birthday;
     private String Email;
     private String phone;
     private int id;
 
-    public User(String userName, String password, String sex, String birthday, String email, String phone) {
+    public User(String userName, String password, String icon, String sex, String birthday, String email, String phone) {
         this.userName = userName;
         this.password = password;
+        this.icon = icon;
         this.sex = sex;
         this.birthday = birthday;
         Email = email;
@@ -40,6 +42,14 @@ public class User {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getBirthday() {

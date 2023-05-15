@@ -13,6 +13,8 @@ import java.util.List;
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.view.adapter.MyFragmentPagerAdapter;
 import gdut.edu.datingforballsports.view.fragment.BlankFragment;
+import gdut.edu.datingforballsports.view.fragment.ForumListFragment;
+import gdut.edu.datingforballsports.view.fragment.HomePageFragment;
 
 
 public class MainActivity extends BaseActivity{
@@ -44,17 +46,17 @@ public class MainActivity extends BaseActivity{
         ivForum = findViewById(R.id.tab_iv_forum_button);
         ivMatch = findViewById(R.id.tab_iv_match_button);
         ivHomepage = findViewById(R.id.tab_iv_homepage_button);
-        ivMessage.setSelected(true);
-        ivCorrect = ivMessage;
+        ivHomepage.setSelected(true);
+        ivCorrect = ivHomepage;
     }
 
     private void initTabView() {
-        viewPager = findViewById(R.id.id_viewpager);
+        viewPager = findViewById(R.id.button_layout_viewpager);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(BlankFragment.newInstance("微信聊天"));
-        fragments.add(BlankFragment.newInstance("通讯录"));
-        fragments.add(BlankFragment.newInstance("发现"));
-        fragments.add(BlankFragment.newInstance("我"));
+        fragments.add(ForumListFragment.newInstance());//"信息"
+        fragments.add(ForumListFragment.newInstance());
+        fragments.add(ForumListFragment.newInstance());//"匹配"
+        fragments.add(HomePageFragment.newInstance());
         MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewPager.setAdapter(pagerAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

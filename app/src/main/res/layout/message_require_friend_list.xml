@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:layout_margin="1dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/message_require_friend_item_friend_logo"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="6dp"
+        android:src="@drawable/default_personal_image" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginEnd="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/message_require_friend_item_friend_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="沐风"
+            android:textColor="#5B595A"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/message_require_friend_item_friend_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="1小时前"
+            android:textColor="#989898"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/message_require_friend_item_friend_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请求添加好友"
+        android:textColor="#989898"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/button_require_friend_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="接受" />
+    <Button
+        android:id="@+id/button_require_friend_refuse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:text="拒绝" />
+</LinearLayout>

@@ -15,28 +15,49 @@ public class ForumListPresenter extends BasePresenter {
         this.viewReference = new WeakReference<View_>(forumListView);
     }
 
-    public void getList() {
+    public void getList(int userId, String token) {
         if (this.model != null && this.viewReference != null && this.viewReference.get() != null) {
-            String token = null;
             ThreadUtils.execute(new Runnable() {
                 @Override
                 public void run() {
-                    ((ForumListModel) model).getForumList(((ForumListView) viewReference).getUserId(), token, new ForumListListener() {
+                    ((ForumListModel) model).getForumList(userId, token, new ForumListListener() {
                         @Override
                         public void onSuccess(List list, String msg) {
                             //成功推荐了
-                            ((ForumListView) viewReference).onForumListLoadSuccess(list, msg);
+                            ((ForumListView) viewReference.get()).onForumListLoadSuccess(list, msg);
                         }
 
                         @Override
                         public void onFails(String msg) {
                             //推荐失败了
-                            ((ForumListView) viewReference).onForumListLoadFail(msg);
+                            ((ForumListView) viewReference.get()).onForumListLoadFail(msg);
                         }
                     });
                 }
             });
+        }
+    }
 
+    public void getList(int userId, String token, String ballType, String city) {
+        if (this.model != null && this.viewReference != null && this.viewReference.get() != null) {
+            ThreadUtils.execute(new Runnable() {
+                @Override
+                public void run() {
+                    ((ForumListModel) model).getForumList(userId, token, ballType, city, new ForumListListener() {
+                        @Override
+                        public void onSuccess(List list, String msg) {
+                            //成功推荐了
+                            ((ForumListView) viewReference.get()).onForumListLoadSuccess(list, msg);
+                        }
+
+                        @Override
+                        public void onFails(String msg) {
+                            //推荐失败了
+                            ((ForumListView) viewReference.get()).onForumListLoadFail(msg);
+                        }
+                    });
+                }
+            });
         }
     }
 }

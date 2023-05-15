@@ -23,12 +23,12 @@ public class LoginModel implements Model_ {
     private String msg = null;
 
     public void sendLoginRequest(String username, String password, LoginListener listener) {
-        String path = "http://192.168.126.1:8080/user/login";
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             msg = "账号或密码不能为空";
             listener.onFails(msg);
             return;
         }
+        String path = "http://192.168.126.1:8080/user/login";
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
         map.put("password", password);
@@ -49,6 +49,7 @@ public class LoginModel implements Model_ {
                 HashMap<String, String> dataMap = new HashMap<>();
                 int userId = -1;
                 String token = null;
+                String icon = null;
                 try {
                     System.out.println("responseData:" + responseData);
                     /*JsonObject returnData = new JsonParser().parse(responseData).getAsJsonObject();
@@ -57,6 +58,7 @@ public class LoginModel implements Model_ {
                     JSONArray jsonArray = new JSONArray(responseData);
                     userId = Integer.parseInt(String.valueOf(jsonArray.getJSONObject(0)));
                     token = String.valueOf(jsonArray.getJSONObject(1));
+                    icon = String.valueOf(jsonArray.getJSONObject(2));
                 } catch (JSONException e) {
                     msg = "ERROR";
                     listener.onFails(msg);
@@ -64,7 +66,7 @@ public class LoginModel implements Model_ {
                 }
                 msg = "登录成功";
                 //还要有token
-                listener.onSuccess(userId, token, msg);
+                listener.onSuccess(userId, token, msg, icon);
             }
         });
     }

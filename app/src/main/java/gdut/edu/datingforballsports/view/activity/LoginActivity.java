@@ -1,6 +1,7 @@
 package gdut.edu.datingforballsports.view.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,17 +9,25 @@ import android.os.Message;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.presenter.LoginPresenter;
+import gdut.edu.datingforballsports.util.GlideEngine;
 import gdut.edu.datingforballsports.util.SharedPreferenceUtils;
+import gdut.edu.datingforballsports.util.TextUtils;
+import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.LoginView;
 
 
 public class LoginActivity extends BaseActivity implements LoginView {
-    private static final int LOGIN_SUCCEED =1;
-    private static final int CALLBACK_FAILED=2;
+    private static final int LOGIN_SUCCEED = 1;
+    private static final int CALLBACK_FAILED = 2;
+    private String icon_uri;
     private LoginPresenter lPresenter;
     public Handler mHandler;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +37,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
             @Override
             public void handleMessage(Message message) {
                 //改变UI
-                switch (message.what){
+                switch (message.what) {
                     case CALLBACK_FAILED:
                         Toast.makeText(getApplicationContext(), "登陆失败！", Toast.LENGTH_LONG).show();
                         break;
@@ -38,12 +47,19 @@ public class LoginActivity extends BaseActivity implements LoginView {
                         // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         //transaction.replace(R.id.main_frame_layout, f1);
                         // transaction.add(R.id.main_frame_layout, f4);
-                        intent.setClass(getApplicationContext(), ForumListActivity.class);
+                        List<String> list = TextUtils.castList(message.obj, String.class);
+                        intent.setClass(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("userId", message.arg1);
-                        intent.putExtra("token", String.valueOf(message.obj));
-                        //存储token
-                        SharedPreferenceUtils.putString(getApplicationContext(), String.valueOf(message.arg1), String.valueOf(message.obj));
-                        SharedPreferenceUtils.putString(getApplicationContext(), "main", String.valueOf(message.arg1));
+                        intent.putExtra("token", list.get(0));
+                        icon_uri = list.get(1);
+
+                        SharedPreferences.Editor edit = sharedPreferences.edit();
+                        edit.putString("userName", getUserName());
+                        edit.putString("password", getPassword());
+                        edit.putInt("userId", message.arg1);
+                        edit.putString("token", list.get(0));
+                        edit.putString("icon", saveIcon(message.arg1));
+                        edit.commit();
                         startActivity(intent);
                         break;
                 }
@@ -55,7 +71,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
     }
 
     private void setData() {
-        this.lPresenter = new LoginPresenter(this);
+        this.lPresenter = new LoginPresenter(this, getApplicationContext());
     }
 
     private void setView() {
@@ -67,24 +83,41 @@ public class LoginActivity extends BaseActivity implements LoginView {
         });
     }
 
+    private String saveIcon(int userId) {
+        ThreadUtils.execute(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+        String storePath = this.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
+        GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("icon", storePath);
+        edit.commit();
+        return storePath;
+    }
+
     @Override
     public String getUserName() {
         EditText username_et = (EditText) findViewById(R.id.enterUsername_login_1);
-        return String.valueOf(username_et.getText());
+        return username_et.getText().toString();
     }
 
     @Override
     public String getPassword() {
         EditText password_et = (EditText) findViewById(R.id.enterPassword_login_2);
-        return String.valueOf(password_et.getText());
+        return password_et.getText().toString();
     }
 
     @Override
-    public void onLoginSuccess(int userId, String token) {
+    public void onLoginSuccess(int userId, String token, String icon) {
         Message msg = Message.obtain();
+        List<String> list = new ArrayList<>();
+        list.add(token);
+        list.add(icon);
         msg.what = LOGIN_SUCCEED; // 消息标识
         msg.arg1 = userId;
-        msg.obj = token;
+        msg.obj = list;
         mHandler.sendMessage(msg);
     }
 

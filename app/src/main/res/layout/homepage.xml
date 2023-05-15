@@ -8,21 +8,37 @@
     tools:context=".view.activity.HomePageActivity">
 
     <include layout="@layout/homepage_header" />
-    <RelativeLayout
+
+    <FrameLayout
         android:id="@+id/homepage_content"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/homepage_header"
-        android:layout_above="@id/footer"
-        android:gravity="center">
+        android:gravity="top|center">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <!--切换视图，应该时fragment-->
+
+        <!--        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/homepage_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />-->
+
+        <!--     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/homepage_forumList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#EDEDED"
+            android:textColor="#949494" />-->
 
-    </RelativeLayout>
+        <!--<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <include layout="@layout/a_post_item"/>
+    <include layout="@layout/a_post_item_1"/>
+</LinearLayout>-->
 
-    <include layout="@layout/footer" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -43,7 +43,7 @@ public class CoverActivity extends BaseActivity implements CoverView {
                         // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         //transaction.replace(R.id.main_frame_layout, f1);
                         // transaction.add(R.id.main_frame_layout, f4);
-                        intent.setClass(getApplicationContext(), ForumListActivity.class);
+                        intent.setClass(getApplicationContext(), MainActivity.class);
                         intent.putExtra("userId", userId);
                         intent.putExtra("token", String.valueOf(token));
                         //存储token

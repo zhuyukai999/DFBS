@@ -71,12 +71,11 @@ public class HomePageActivity extends BaseActivity implements HomePageView {
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
         hPresenter.getUserMessage(userId, token);
-        hPresenter.getList(userId, token);
     }
 
     private void setView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView = (RecyclerView) findViewById(R.id.homepage_forumList);
+        //recyclerView = (RecyclerView) findViewById(R.id.homepage_forumList);
         recyclerView.setLayoutManager(linearLayoutManager);
         mCommonAdapter = new CommonAdapter<>(list, new CommonAdapter.OnMoreBindDataListener<Post>() {
             @Override
@@ -197,7 +196,7 @@ public class HomePageActivity extends BaseActivity implements HomePageView {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         //设置发布帖子的点击事件
         buttonClick(R.id.homepage_publish_post,view->{
-            startActivity(new Intent(this, PublishPostActivity.class));
+           // startActivity(new Intent(this, PublishPostActivity.class));
         });
     }
 
@@ -214,11 +213,4 @@ public class HomePageActivity extends BaseActivity implements HomePageView {
         this.RCmsg = RCmsg;
     }
 
-    @Override
-    public void onLoadUserDynamicSuccess(Object list) {
-        Message msg = Message.obtain();
-        msg.what = LOAD_SUCCEED; // 消息标识
-        msg.obj = list;
-        mHandler.sendMessage(msg);
-    }
 }

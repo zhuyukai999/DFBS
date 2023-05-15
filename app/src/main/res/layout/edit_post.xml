@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edit_post_et_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="105dp"
+        android:background="@drawable/comment_dialog_et_selector"
+        android:layout_margin="12dp"
+        android:hint="请输入帖子内容..."
+        android:textSize="14sp"
+        android:gravity="left|top"
+        android:paddingLeft="15dp"
+        android:paddingTop="12dp"
+        android:textColorHint="#929292"
+        android:textColor="#808080"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_post_et_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="80dp"
+            android:background="@drawable/comment_dialog_et_selector"
+            android:layout_margin="12dp"
+            android:padding="8dp"
+            android:hint="请输入球的种类"
+            android:textSize="14sp"
+            android:gravity="left|center"
+            android:textColorHint="#929292"
+            android:textColor="#808080"/>
+
+        <Switch
+            android:id="@+id/edit_post_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:padding="8dp"
+            android:text="是否上传地址" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_post_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:textSize="21dp"
+        android:text="上传" />
+
+
+</LinearLayout>

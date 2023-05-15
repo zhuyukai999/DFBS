@@ -1,26 +1,34 @@
 package gdut.edu.datingforballsports.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Post
-{
+public class Post implements Serializable {
     private int id;
     private int publisherId;
+    private String publisherName;
+    private String publisherLogo;
     private String content;
     private int likeNum;
     private int commentNum;
+    private boolean ifLike;
+    private boolean ifCollect;
     private Date createTime;
     private List<String> imagePaths;
 
     public Post() {
     }
 
-    public Post(int publisherId, String content, int likeNum, int commentNum, Date createTime, List<String> imagePaths) {
+    public Post(int publisherId, String publisherName, String publisherLogo, String content, int likeNum, int commentNum, boolean ifLike, boolean ifCollect, Date createTime, List<String> imagePaths) {
         this.publisherId = publisherId;
+        this.publisherName = publisherName;
+        this.publisherLogo = publisherLogo;
         this.content = content;
         this.likeNum = likeNum;
         this.commentNum = commentNum;
+        this.ifLike = ifLike;
+        this.ifCollect = ifCollect;
         this.createTime = createTime;
         this.imagePaths = imagePaths;
     }
@@ -39,6 +47,22 @@ public class Post
 
     public void setPublisherId(int publisherId) {
         this.publisherId = publisherId;
+    }
+
+    public String getPublisherName() {
+        return publisherName;
+    }
+
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
+    }
+
+    public String getPublisherLogo() {
+        return publisherLogo;
+    }
+
+    public void setPublisherLogo(String publisherLogo) {
+        this.publisherLogo = publisherLogo;
     }
 
     public String getContent() {
@@ -63,6 +87,22 @@ public class Post
 
     public void setCommentNum(int commentNum) {
         this.commentNum = commentNum;
+    }
+
+    public boolean isIfLike() {
+        return ifLike;
+    }
+
+    public void setIfLike(boolean ifLike) {
+        this.ifLike = ifLike;
+    }
+
+    public boolean isIfCollect() {
+        return ifCollect;
+    }
+
+    public void setIfCollect(boolean ifCollect) {
+        this.ifCollect = ifCollect;
     }
 
     public Date getCreateTime() {

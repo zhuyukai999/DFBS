@@ -2,20 +2,36 @@ package gdut.edu.datingforballsports.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.FileUtils;
+import android.provider.MediaStore;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.luck.picture.lib.engine.ImageEngine;
 import com.luck.picture.lib.interfaces.OnCallbackListener;
 import com.luck.picture.lib.utils.ActivityCompatHelper;
+import com.luck.picture.lib.utils.ToastUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import gdut.edu.datingforballsports.R;
 
@@ -119,6 +135,7 @@ public class GlideEngine implements ImageEngine {
         if (!ActivityCompatHelper.assertValidRequest(context)) {
             return;
         }
+        imageView.setTag(url);
         Glide.with(context)
                 .load(url)
                 .override(200, 200)
@@ -136,6 +153,87 @@ public class GlideEngine implements ImageEngine {
     public void resumeRequests(Context context) {
         Glide.with(context).resumeRequests();
     }
+
+    public void loadItemNetImage(Context context, String url, ImageView imageView) {
+        Glide.with(context).load(url)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .error(R.drawable.default_personal_image)
+                .placeholder(com.luck.picture.lib.R.drawable.ps_image_placeholder)
+                .centerCrop()
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        if (imageView.getTag().equals(url)) {
+                            imageView.setImageDrawable(resource);
+                        }
+                        return;
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+
+    }
+
+    public void loadNetImage(Context context, String url, ImageView imageView) {
+        Glide.with(context).load(url)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .error(R.drawable.default_personal_image)
+                .placeholder(com.luck.picture.lib.R.drawable.ps_image_placeholder)
+                .centerCrop()
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        if (imageView.getTag().equals(url)) {
+                            imageView.setImageDrawable(resource);
+                        }
+                        return;
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+
+    }
+
+    public void saveImage(Context context, String sourceUrl, String saveUrl) {
+        if(sourceUrl.equals(saveUrl)){
+            return;
+        }
+        Glide.with(context).load(sourceUrl)
+                .placeholder(com.luck.picture.lib.R.drawable.ps_image_placeholder)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        if (resource == null)
+                            return;
+                        try {
+                            File file = new File(saveUrl);
+                            if (file.exists()) {
+                                file.delete();
+                            }
+                            if (!file.exists())
+                                file.createNewFile();
+                            FileOutputStream out = null;
+                            out = new FileOutputStream(file);
+                            ((BitmapDrawable) resource).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out);
+                            out.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+    }
+
 
     private GlideEngine() {
     }

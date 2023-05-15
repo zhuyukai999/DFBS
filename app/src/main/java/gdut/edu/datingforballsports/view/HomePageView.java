@@ -12,5 +12,4 @@ public interface HomePageView extends View_ {
 
     void onLoadFails(String RCmsg);
 
-    void onLoadUserDynamicSuccess(Object list);
 }

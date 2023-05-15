@@ -1,19 +1,24 @@
 package gdut.edu.datingforballsports.presenter;
 
+import android.content.Context;
 import android.os.Looper;
 
 import java.lang.ref.WeakReference;
 
 import gdut.edu.datingforballsports.model.Listener.LoginListener;
 import gdut.edu.datingforballsports.model.LoginModel;
+import gdut.edu.datingforballsports.util.GlideEngine;
 import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.LoginView;
 import gdut.edu.datingforballsports.view.View_;
 
 public class LoginPresenter extends BasePresenter {
-    public LoginPresenter(LoginView loginView) {
+    private Context context;
+
+    public LoginPresenter(LoginView loginView, Context context) {
         this.model = new LoginModel();
         this.viewReference = new WeakReference<View_>(loginView);
+        this.context = context;
     }
 
     public void login() {
@@ -26,9 +31,11 @@ public class LoginPresenter extends BasePresenter {
                 public void run() {
                     ((LoginModel) model).sendLoginRequest(userName, password, new LoginListener() {
                         @Override
-                        public void onSuccess(int userId, String token, String msg) {
+                        public void onSuccess(int userId, String token, String msg, String icon) {
                             if (viewReference.get() != null) {
-                                loginView.onLoginSuccess(userId, token);
+                                String storePath = context.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
+                                GlideEngine.createGlideEngine().saveImage(context, icon, storePath);
+                                ((LoginView) viewReference.get()).onLoginSuccess(userId, token, icon);
                             }
                         }
 
@@ -37,7 +44,7 @@ public class LoginPresenter extends BasePresenter {
                             System.out.println("Presenter:" + Looper.myLooper() + "||||||||" + Looper.getMainLooper());
                             System.out.println("Presenter:" + Thread.currentThread().getId());
                             if (viewReference.get() != null) {
-                                loginView.onLoginFails();
+                                ((LoginView) viewReference.get()).onLoginFails();
                             }
                         }
                     });

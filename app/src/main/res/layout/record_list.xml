@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center_vertical"
+        android:background="#FFF2F2"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/record_button_begin_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:textSize="16dp"
+                android:text="开始时间" />
+
+            <Button
+                android:id="@+id/edit_post_button_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16dp"
+                android:text="结束时间" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edit_post_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="4dp"
+                android:paddingRight="8dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:maxLines="10"
+                android:ellipsize="end"
+                android:textColor="#949494"
+                android:textSize="16sp"
+                android:text="李华"
+                android:hint="请输入账号名" />
+
+            <Switch
+                android:id="@+id/record_list_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="管理员" />
+
+            <Button
+                android:id="@+id/record_list_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16dp"
+                android:text="搜索" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+<!--    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/record_list_forumList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />-->
+</LinearLayout>

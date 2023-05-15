@@ -6,10 +6,12 @@ import gdut.edu.datingforballsports.domain.User;
 import gdut.edu.datingforballsports.model.Listener.RegisterListener;
 import gdut.edu.datingforballsports.model.RegisterModel;
 import gdut.edu.datingforballsports.util.EmailUtils;
+import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.RegisterView;
 import gdut.edu.datingforballsports.view.View_;
 
 public class RegisterPresenter extends BasePresenter {
+
     public RegisterPresenter(RegisterView registerView) {
         this.model = new RegisterModel();
         this.viewReference = new WeakReference<View_>(registerView);
@@ -23,22 +25,26 @@ public class RegisterPresenter extends BasePresenter {
                         && !registerView.getUserName().equals("") && !registerView.getPassword().equals("")
                         && registerView.getSex().equals("") && !registerView.getBirthday().equals("")
                         && !registerView.getEmail().equals("") && !registerView.getPhoneNumber().equals("")) {
-                    User user = new User(registerView.getUserName(), registerView.getPassword(), registerView.getSex(),
+                    User user = new User(registerView.getUserName(), registerView.getPassword(), registerView.getImagePath(), registerView.getSex(),
                             registerView.getBirthday(), registerView.getEmail(), registerView.getPhoneNumber());
-                    ((RegisterModel) model).register(user, new RegisterListener() {  //数据经过筛选后交由M进行判断是否注册成功
+                    ThreadUtils.execute(new Runnable() {
                         @Override
-                        public void onSuccess() {
-                            registerView.onRegisterSuccess();
-                        }
+                        public void run() {
+                            ((RegisterModel) model).register(user, new RegisterListener() {  //数据经过筛选后交由M进行判断是否注册成功
+                                @Override
+                                public void onSuccess(String token, int userId) {
+                                    registerView.onRegisterSuccess(token, userId);
+                                }
 
-                        @Override
-                        public void onFails() {
-                            registerView.onRegisterFails();
+                                @Override
+                                public void onFails() {
+                                    registerView.onRegisterFails();
+                                }
+                            });
                         }
                     });
                     //TODO
                     //还没有将注册信息储存起来
-                    registerView.onRegisterSuccess();
                 } else {
                     registerView.onRegisterFails();
                 }
