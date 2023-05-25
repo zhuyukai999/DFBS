@@ -34,7 +34,8 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     private List<Friend> list = new ArrayList<>();
     private Friend friend;
     private CommonAdapter<Friend> mCommonAdapter;
-    FragmentManager fm;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
     private ChatMessageFragment chatMessageFragment;
     private FriendFragment friendFragment;
     private Intent intent;
@@ -42,6 +43,7 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     private String token;
     private String RCmsg;
     public Handler mHandler;
+    private Bundle savedInstanceState;
 
     public MessageAndFriendFragment() {
     }
@@ -54,6 +56,7 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -79,33 +82,35 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     }
 
     private void setView() {
-        buttonClick(R.id.message_list_buttonT, view -> {
+        buttonClick(view.findViewById(R.id.message_list_buttonT), view -> {
             setTabSelection(0);
         });
-        buttonClick(R.id.friend_list_buttonT, view -> {
+        buttonClick(view.findViewById(R.id.friend_list_buttonT), view -> {
             setTabSelection(1);
         });
 
         fm = getChildFragmentManager();
+        ft = fm.beginTransaction();
         setTabSelection(0);
     }
 
     private void setTabSelection(int index) {
-        FragmentTransaction ft = fm.beginTransaction();
         hideFragment(ft);
         switch (index) {
             case 0:
-                if (chatMessageFragment == null) {
+                if (savedInstanceState == null && chatMessageFragment == null) {
                     chatMessageFragment = ChatMessageFragment.newInstance();
-                    ft.add(R.id.homepage_content, chatMessageFragment);
+                    ft.add(R.id.MessageAndFriend_list_forumList, chatMessageFragment);
+                    ft.commit();
                 } else {
                     ft.show(chatMessageFragment);
                 }
                 break;
             case 1:
-                if (friendFragment == null) {
+                if (savedInstanceState == null && friendFragment == null) {
                     friendFragment = FriendFragment.newInstance();
-                    ft.add(R.id.homepage_content, friendFragment);
+                    ft.add(R.id.MessageAndFriend_list_forumList, friendFragment);
+                    ft.commit();
                 } else {
                     ft.show(friendFragment);
                 }
@@ -130,5 +135,17 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     @Override
     public void onLoadFails(String RCmsg) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        /*if (chatMessageFragment != null) {
+            ft.detach(chatMessageFragment);
+        }
+        if (friendFragment != null) {
+            ft.detach(friendFragment);
+        }*/
+        System.out.println("MessageAndFriendFragmentdestroywwwwwwwwwwwwwwwwwwwwwwwwww");
     }
 }

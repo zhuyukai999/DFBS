@@ -1,31 +1,31 @@
 package gdut.edu.datingforballsports.domain;
 
 public class User {
-    private String userName;
+    private String username;
     private String password;
     private String icon;
     private String sex;
     private String birthday;
-    private String Email;
-    private String phone;
+    private String email;
+    private String phoneNumber;
     private int id;
 
-    public User(String userName, String password, String icon, String sex, String birthday, String email, String phone) {
-        this.userName = userName;
+    public User(String username, String password, String icon, String sex, String birthday, String email, String phoneNumber) {
+        this.username = username;
         this.password = password;
         this.icon = icon;
         this.sex = sex;
         this.birthday = birthday;
-        Email = email;
-        this.phone = phone;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -61,19 +61,19 @@ public class User {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public int getId() {
@@ -82,5 +82,19 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", icon='" + icon + '\'' +
+                ", sex='" + sex + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", Email='" + email + '\'' +
+                ", phone='" + phoneNumber + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

@@ -79,7 +79,6 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
 
     private void setView() {
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -91,6 +90,7 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 String responseData = response.body().string();
+                                System.out.println("responseData:" + responseData);
                                 try {
                                     JSONObject jsonObjectALL = new JSONObject(responseData);
                                     JSONObject result = jsonObjectALL.getJSONObject("result");
@@ -110,7 +110,7 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
             }
         });
         buttonClick(R.id.edit_post_button, view -> {
-            ePresenter.uploadPost(userId,token,postContent.getText().toString(), ballType.getText().toString(), city);
+            ePresenter.uploadPost(userId, token, postContent.getText().toString(), ballType.getText().toString(), city);
         });
     }
 

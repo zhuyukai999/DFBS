@@ -22,25 +22,24 @@ import okhttp3.Response;
 public class ForumListModel implements Model_ {
     private String msg = null;
 
-    //TODO
-    //待完善，个性化推荐论坛帖子
     public void getForumList(int userId, String token, ForumListListener listener) {
         if (userId >= 1) {
-            String path = "http://192.168.126.1:8080/forum/getPost";
+            String path = "http://192.168.126.1:8080/forum/getForumPost/" + userId;
             Map<String, String> map = new HashMap<>();
-            map.put("userId", String.valueOf(userId));
             HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     msg = "请求失败";
                     listener.onFails(msg);
                 }
+
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     if (TextUtils.isEmpty(responseData)) {
                         msg = "ERROR";
                         listener.onFails(msg);
+                        return;
                     }
                     Gson gson = new Gson();
                     ArrayList<Post> postList = new ArrayList<>();
@@ -66,10 +65,8 @@ public class ForumListModel implements Model_ {
 
     public void getForumList(int userId, String token, String ballType, String city, ForumListListener listener) {
         if (userId >= 1) {
-            //在这里进行推荐啊啊啊
-            String path = "http://192.168.126.1:8080/forum/getPost";
+            String path = "http://192.168.126.1:8080/forum/getScreenPost/" + userId;
             Map<String, String> map = new HashMap<>();
-            map.put("userId", String.valueOf(userId));
             if (ballType != null) {
                 map.put("ballType", ballType);
             }
@@ -81,13 +78,16 @@ public class ForumListModel implements Model_ {
                 public void onFailure(Call call, IOException e) {
                     msg = "请求失败";
                     listener.onFails(msg);
+                    return;
                 }
+
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     if (TextUtils.isEmpty(responseData)) {
                         msg = "ERROR";
                         listener.onFails(msg);
+                        return;
                     }
                     Gson gson = new Gson();
                     ArrayList<Post> postList = new ArrayList<>();

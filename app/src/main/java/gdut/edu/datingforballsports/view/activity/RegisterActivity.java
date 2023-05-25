@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -36,6 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.presenter.RegisterPresenter;
 import gdut.edu.datingforballsports.util.GlideEngine;
+import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.RegisterView;
 import top.zibin.luban.Luban;
@@ -45,6 +50,7 @@ import top.zibin.luban.OnNewCompressListener;
 public class RegisterActivity extends BaseActivity implements RegisterView {
     private static final int REGISTER_SUCCEED = 1;
     private static final int CALLBACK_FAILED = 2;
+    private static final int EMAIL_FALSE = 3;
     private RegisterPresenter rPresenter;
     private CircleImageView icon_ci;
     private String icon_uri;
@@ -76,18 +82,29 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case REGISTER_SUCCEED:
+                        Toast.makeText(getApplicationContext(), "注册成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        icon_uri = saveIcon(message.arg1);
                         intent.putExtra("userId", message.arg1);
                         intent.putExtra("token", (String) message.obj);
+                        intent.putExtra("icon", icon_uri);
                         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("user" + message.arg1, MODE_PRIVATE);
                         SharedPreferences.Editor edit = sharedPreferences.edit();
                         edit.putString("userName", getUserName());
                         edit.putString("password", getPassword());
                         edit.putInt("userId", message.arg1);
                         edit.putString("token", (String) message.obj);
-                        edit.putString("icon", saveIcon(message.arg1));
+                        edit.putString("userName", getUserName());
+                        edit.putString("icon", icon_uri);
                         edit.commit();
+                        startActivity(intent);
+                        break;
                     case CALLBACK_FAILED:
+                        Toast.makeText(getApplicationContext(), "注册失败", Toast.LENGTH_SHORT).show();
+                        break;
+                    case EMAIL_FALSE:
+                        Toast.makeText(getApplicationContext(), "邮箱格式错误", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -142,8 +159,13 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
                     .forSystemResult(new OnResultCallbackListener<LocalMedia>() {
                         @Override
                         public void onResult(ArrayList<LocalMedia> result) {
-                            icon_uri = result.get(0).getCompressPath();
-                            icon_ci.setImageURI(Uri.parse(icon_uri));
+                            String imageSrc = result.get(0).getCompressPath();
+                            icon_uri = getApplicationContext().getFilesDir().getAbsolutePath() + "/user" + "/icon" + "/user" + ".png";
+                            System.out.println(icon_uri);
+                            File fileSrc = new File(imageSrc);
+                            File fileDes = new File(icon_uri);
+                            TextUtils.copyDir(fileSrc, fileDes);
+                            icon_ci.setImageURI(Uri.parse(imageSrc));
                             /*Intent intent = new Intent();
                             intent.putExtra("icon_uri", icon_uri);
                             setResult(PictureConfig.CHOOSE_REQUEST, intent);*/
@@ -168,16 +190,27 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
             email_et.setText("");
             phoneNumber_et.setText("");
         });
+
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, day) -> {
+            Calendar birth = Calendar.getInstance();
+            Date date = birth.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String format = sdf.format(date);
+            birthday_sc.setText(format);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        buttonClick(R.id.selectBirthday_register_1, view -> {
+            dialog.show();
+        });
     }
 
     private String saveIcon(int userId) {
-        ThreadUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
         String storePath = this.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
-        GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
+        File file = new File(icon_uri);
+        File file1 = new File(storePath);
+        TextUtils.copyDir(file, file1);
+        //GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
         return storePath;
     }
 
@@ -203,25 +236,18 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
 
     @Override
     public String getSex() {
-        int sex_id = ((RadioGroup) findViewById(R.id.selectSex_Register_1)).getCheckedRadioButtonId();
-        String sex = sex_id == -1 ? "" : ((RadioButton) findViewById(sex_id)).getText().toString();
+        RadioButton radiobutton = findViewById(((RadioGroup) findViewById(R.id.selectSex_Register_1)).getCheckedRadioButtonId());
+        String sex = null;
+        if (radiobutton.equals(findViewById(R.id.selectMale_register_1))) {
+            sex = "male";
+        } else if (radiobutton.equals(findViewById(R.id.selectFemale_register_2))) {
+            sex = "female";
+        }
         return sex;
     }
 
     @Override
     public String getBirthday() {
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, day) -> {
-            Calendar birth = Calendar.getInstance();
-            Date date = birth.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String format = sdf.format(date);
-            birthday_sc.setText(format);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
-        buttonClick(R.id.selectBirthday_register_1, view -> {
-            dialog.show();
-        });
         return birthday_sc.getText().toString();
     }
 
@@ -243,7 +269,6 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
         msg.arg1 = userId;
         this.token = token;
         mHandler.sendMessage(msg);
-        new AlertDialog.Builder(this).setTitle("真的").setMessage("注册成功").show();
     }
 
     @Override
@@ -251,11 +276,12 @@ public class RegisterActivity extends BaseActivity implements RegisterView {
         Message msg = Message.obtain();
         msg.what = CALLBACK_FAILED; // 消息标识
         mHandler.sendMessage(msg);
-        new AlertDialog.Builder(this).setTitle("有问题").setMessage("有问题！").setPositiveButton("确定", null).show();
     }
 
     @Override
     public void EmailFalse() {
-        Toast.makeText(getApplicationContext(), "邮箱格式错误", Toast.LENGTH_SHORT).show();
+        Message msg = Message.obtain();
+        msg.what = EMAIL_FALSE; // 消息标识
+        mHandler.sendMessage(msg);
     }
 }

@@ -4,42 +4,61 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import gdut.edu.datingforballsports.model.Listener.AccountSettingListener;
 import gdut.edu.datingforballsports.util.HttpUtils;
 import gdut.edu.datingforballsports.util.TextUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class AccountSettingModel implements Model_ {
-    public void modifyAccount(int userId, String token, String userName, String icon_uri, AccountSettingListener listener) {
-        String path = "user/modifyAccount";
-        HttpUtils.sendHttpRequestPost(path, userId, token, userName, icon_uri, new retrofit2.Callback<ResponseBody>() {
-
+    public void modifyAccount(int userId, String token, String username, String icon_uri, AccountSettingListener listener) {
+        String path = "http://192.168.126.1:8080/user/modifyAccount";
+        Map<String, String> map = new HashMap<>();
+        map.put("userId", String.valueOf(userId));
+        map.put("username", username);
+        HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseData = null;
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                String responseData;
                 try {
                     responseData = response.body().string();
+                    System.out.println("responseData:"+responseData);
                     if (TextUtils.isEmpty(responseData)) {
                         listener.onFails();
+                        return;
                     }
-                    JSONObject jsonObject = new JSONObject(responseData);
-                    if (jsonObject.getBoolean("setupComplete")) {
-                        listener.onSuccess();
+                    if (responseData.equals("true")) {
+                        String path = "http://192.168.126.1:8080/user/uploadImage";
+                        HttpUtils.sendImage(path, userId, token, icon_uri, new Callback() {
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                String iconPath = response.body().string();
+                                System.out.println("iconPath:" + iconPath);
+                                listener.onSuccess();
+                            }
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                System.out.println(e);
+                                listener.onFails();
+                                return;
+                            }
+                        });
                     }
-                    listener.onFails();
-                } catch (IOException | JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(okhttp3.Call call, IOException e) {
                 listener.onFails();
             }
         });
+
     }
 }

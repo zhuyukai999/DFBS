@@ -26,6 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.presenter.AccountSettingPresenter;
 import gdut.edu.datingforballsports.util.GlideEngine;
+import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.AccountSettingView;
 import top.zibin.luban.Luban;
@@ -53,7 +54,7 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_setting);
-
+        System.out.println("AccountSettingActivityonCreate:innnnnnnnnnnnnnnnnnnnnnnnnnn");
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -63,9 +64,14 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
                         intent.putExtra("token", token);
                         SharedPreferences.Editor edit = sharedPreferences.edit();
                         edit.putString("userName", userName_et.getText().toString());
-                        saveIcon(message.arg1);
+                        edit.putString("icon", saveIcon(userId));
                         edit.commit();
+                        Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
                         finish();
+                        break;
+                    case SETTING_FAILED:
+                        Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -74,6 +80,7 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     }
 
     private void setData() {
+        System.out.println("11111111111111111111111111111111111");
         icon_ci = findViewById(R.id.account_setting_personal_icon);
         icon_select = findViewById(R.id.account_setting_change_icon);
         userName_et = findViewById(R.id.account_setting_edit_username);
@@ -84,11 +91,13 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
         sharedPreferences = getApplicationContext().getSharedPreferences("user" + userId, MODE_PRIVATE);
-        icon_ci.setImageURI(Uri.parse(sharedPreferences.getString("icon", null)));
+        icon_uri = sharedPreferences.getString("icon", null);
+        icon_ci.setImageURI(Uri.parse(icon_uri));
         this.aPresenter = new AccountSettingPresenter(this, getApplicationContext());
     }
 
     private void setView() {
+        System.out.println("2222222222222222222222222222222222");
         buttonClick(R.id.account_setting_change_icon, view -> {
             PictureSelector.create(this)
                     .openSystemGallery(SelectMimeType.ofImage())
@@ -119,8 +128,12 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
                     .forSystemResult(new OnResultCallbackListener<LocalMedia>() {
                         @Override
                         public void onResult(ArrayList<LocalMedia> result) {
-                            icon_uri = result.get(0).getCompressPath();
-                            icon_ci.setImageURI(Uri.parse(icon_uri));
+                            String imageSrc = result.get(0).getCompressPath();
+                            icon_uri = getApplicationContext().getFilesDir().getAbsolutePath() + "/user" + "/icon" + "/user" + ".png";
+                            File fileSrc = new File(imageSrc);
+                            File fileDes = new File(icon_uri);
+                            TextUtils.copyDir(fileSrc, fileDes);
+                            icon_ci.setImageURI(Uri.parse(imageSrc));
                             /*Intent intent = new Intent();
                             intent.putExtra("icon_uri", icon_uri);
                             setResult(PictureConfig.CHOOSE_REQUEST, intent);*/
@@ -147,19 +160,15 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
         buttonClick(R.id.account_setting_logout, view -> {
 
         });
+        System.out.println("33333333333333333333333333333333333333");
     }
 
     private String saveIcon(int userId) {
-        ThreadUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-        String storePath = this.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
-        GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString("icon", storePath);
-        edit.commit();
+        String storePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
+        File file = new File(icon_uri);
+        File file1 = new File(storePath);
+        TextUtils.copyDir(file, file1);
+        //GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
         return storePath;
     }
 
@@ -167,6 +176,7 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     public void onSettingSuccess() {
         Message msg = Message.obtain();
         msg.what = SETTING_SUCCEED; // 消息标识
+        mHandler.sendMessage(msg);
     }
 
     @Override

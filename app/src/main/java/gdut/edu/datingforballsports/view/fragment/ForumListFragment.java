@@ -30,6 +30,7 @@ import gdut.edu.datingforballsports.presenter.ForumListPresenter;
 import gdut.edu.datingforballsports.util.GPSUtils;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.ForumListView;
+import gdut.edu.datingforballsports.view.Service.SocketService;
 import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
@@ -45,8 +46,8 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
 
     private ForumListPresenter fPresenter;
 
-    private List<Post> list = new ArrayList<>();
-    private CommonAdapter<Post> mCommonAdapter;
+    private List<Post> list = null;
+    private CommonAdapter<Post> mCommonAdapter = null;
     private Intent intent;
     private int userId = -1;
     private String token;
@@ -79,7 +80,13 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                     case LOAD_SUCCEED:
                         Toast.makeText(getActivity(), "加载成功！", Toast.LENGTH_LONG).show();
                         list = TextUtils.castList(message.obj, Post.class);
-                        setView();
+                        if (list != null) {
+                            if (mCommonAdapter == null) {
+                                setView();
+                            } else {
+                                mCommonAdapter.changeAll(list);
+                            }
+                        }
                         break;
                 }
             }

@@ -10,11 +10,15 @@ public interface MessageDao {
     public long insertMessageBean(MessageBean messageBean);
     public long deleteMessageBean(int id);
     public List<MessageBean> getAllMessageBean();
+    public int getMessageBeanCountByIdAndType(int type,int otherOrChatRoomId);
+
     public long insertChatMessage(ChatMessage chatMessage);
     public long deleteChatMessage(int otherId);
     public List<ChatMessage> getChatMessage(int otherId);
-    public long insertChatRoomMessage(ChatRoomMessage chatRoomMessage);
+
+    public long insertChatRoomMessage(ChatMessage chatRoomMessage);
     public long deleteChatRoomMessage(int chatRoomId);
-    public List<ChatRoomMessage> getChatRoomMessage(int chatRoomId);
+    public List<ChatMessage> getChatRoomMessage(int chatRoomId);
+
     public void closeDb();
 }

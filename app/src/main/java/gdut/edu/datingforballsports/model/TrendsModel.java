@@ -23,11 +23,10 @@ public class TrendsModel implements Model_ {
     private String msg = null;
 
     public void getTrendsList(int userId, String token, TrendsListener listener) {
-        if (userId >= 1 && token !=null) {
-            String path = "http://192.168.126.1:8080/user/getUserTrends";
+        if (userId >= 1 && token != null) {
+            String path = "http://192.168.126.1:8080/forum/getUserTrends/" + userId;
             Map<String, String> map = new HashMap<>();
-            map.put("userId", String.valueOf(userId));
-            HttpUtils.sendHttpRequestPostWithTokenAndId(path, map,token, new Callback() {
+            HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
 
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -46,14 +45,14 @@ public class TrendsModel implements Model_ {
                     Post post = new Post();
                     ArrayList<Post> postList = new ArrayList<>();
                     try {
-                        JSONArray jsonArray=new JSONArray(responseData);
-                        for(int i=0;i<jsonArray.length();i++){
+                        JSONArray jsonArray = new JSONArray(responseData);
+                        for (int i = 0; i < jsonArray.length(); i++) {
 //                          将Json数组中的元素，拿出来转换成Json对象
-                            JSONObject jsonObject=(JSONObject) jsonArray.get(i);
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 //                          将Json对象转换成实体对象，并加入数组
-                            post=gson.fromJson(String.valueOf(jsonObject), Post.class);
+                            post = gson.fromJson(String.valueOf(jsonObject), Post.class);
                             postList.add(post);
-                            listener.onSuccess(postList,msg);
+                            listener.onSuccess(postList, msg);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

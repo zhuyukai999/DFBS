@@ -36,14 +36,20 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-<!--    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/friend_list_viewpager"
+    <!--    <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/friend_list_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />-->
+
+    <!--    <include layout="@layout/message_item_1"/>
+        <include layout="@layout/message_item_2"/>-->
+
+    <LinearLayout
+        android:id="@+id/MessageAndFriend_list_forumList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />-->
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    </LinearLayout>
 
-<!--    <include layout="@layout/message_item_1"/>
-    <include layout="@layout/message_item_2"/>-->
-
-    <include layout="@layout/friend_list"/>
 </LinearLayout>

@@ -16,7 +16,7 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-<!--        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/chat_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -24,7 +24,7 @@
             app:contentScrim="#212121"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/chat_toolbar"
@@ -36,17 +36,12 @@
         <!--</com.google.android.material.appbar.CollapsingToolbarLayout>-->
     </com.google.android.material.appbar.AppBarLayout>
 
-  <!--  <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/msg_recycler_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/msg_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <include layout="@layout/chat_msg_item"/>
-    </LinearLayout>
+        android:layout_weight="1"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

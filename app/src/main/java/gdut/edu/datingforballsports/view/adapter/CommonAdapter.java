@@ -80,5 +80,17 @@ public class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHolder> {
         mList.remove(position);
         notifyItemRemoved(position);
     }
+
+    public void change(T item,int position) {
+        mList.remove(position);
+        mList.add(position, item);
+        notifyItemChanged(position);
+    }
+
+    public void changeAll(List<T> list) {
+        mList.removeAll(list);
+        mList.addAll(list);
+        notifyAll();
+    }
 }
 

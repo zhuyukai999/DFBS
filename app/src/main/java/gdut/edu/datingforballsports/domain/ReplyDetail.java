@@ -2,12 +2,12 @@ package gdut.edu.datingforballsports.domain;
 
 public class ReplyDetail {
     private String userName;
-    private int userId;
-    private String commentId;
+    private int publisherId;
     private String content;
     private int likeNum;
     private boolean ifLike;
-    private String createDate;
+    private String createTime;
+    private String commentId;
 
     public ReplyDetail(String userName, String content) {
         this.userName = userName;
@@ -21,11 +21,11 @@ public class ReplyDetail {
         return userName;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setPublisherId(int publisherId) {
+        this.publisherId = publisherId;
     }
-    public int getUserId() {
-        return userId;
+    public int getPublisherId() {
+        return publisherId;
     }
 
     public void setCommentId(String commentId) {
@@ -58,10 +58,10 @@ public class ReplyDetail {
         this.ifLike = ifLike;
     }
 
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
-    public String getCreateDate() {
-        return createDate;
+    public String getCreateTime() {
+        return createTime;
     }
 }

@@ -26,8 +26,10 @@ public class LoginActivity extends BaseActivity implements LoginView {
     private static final int CALLBACK_FAILED = 2;
     private String icon_uri;
     private LoginPresenter lPresenter;
+    private Intent intent;
     public Handler mHandler;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +45,17 @@ public class LoginActivity extends BaseActivity implements LoginView {
                         break;
                     case LOGIN_SUCCEED:
                         Toast.makeText(getApplicationContext(), "登陆成功！", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent();
+                        Intent intent = getIntent();
                         // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         //transaction.replace(R.id.main_frame_layout, f1);
                         // transaction.add(R.id.main_frame_layout, f4);
                         List<String> list = TextUtils.castList(message.obj, String.class);
-                        intent.setClass(getApplicationContext(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setClass(getApplicationContext(), MainActivity.class);
                         intent.putExtra("userId", message.arg1);
                         intent.putExtra("token", list.get(0));
                         icon_uri = list.get(1);
-
-                        SharedPreferences.Editor edit = sharedPreferences.edit();
+                        sharedPreferences = getApplicationContext().getSharedPreferences("user" + message.arg1, MODE_PRIVATE);
+                        edit = sharedPreferences.edit();
                         edit.putString("userName", getUserName());
                         edit.putString("password", getPassword());
                         edit.putInt("userId", message.arg1);
@@ -61,6 +63,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
                         edit.putString("icon", saveIcon(message.arg1));
                         edit.commit();
                         startActivity(intent);
+                        finish();
                         break;
                 }
             }
@@ -79,7 +82,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
             lPresenter.login();
         });
         buttonClick(R.id.buttonRegister_login_2, view -> {
-            startActivity(new Intent(this, HomePageActivity.class));
+            startActivity(new Intent(this, RegisterActivity.class));
         });
     }
 
@@ -90,10 +93,8 @@ public class LoginActivity extends BaseActivity implements LoginView {
             }
         });
         String storePath = this.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
+        System.out.println("icon_uri:" + icon_uri);
         GlideEngine.createGlideEngine().saveImage(this, icon_uri, storePath);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString("icon", storePath);
-        edit.commit();
         return storePath;
     }
 
@@ -110,11 +111,12 @@ public class LoginActivity extends BaseActivity implements LoginView {
     }
 
     @Override
-    public void onLoginSuccess(int userId, String token, String icon) {
+    public void onLoginSuccess(int userId, String token, String icon, String userName) {
         Message msg = Message.obtain();
         List<String> list = new ArrayList<>();
         list.add(token);
         list.add(icon);
+        list.add(userName);
         msg.what = LOGIN_SUCCEED; // 消息标识
         msg.arg1 = userId;
         msg.obj = list;

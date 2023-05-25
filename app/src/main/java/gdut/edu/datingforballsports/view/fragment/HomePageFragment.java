@@ -1,6 +1,8 @@
 package gdut.edu.datingforballsports.view.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,8 +10,15 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.domain.User;
@@ -25,6 +35,7 @@ import gdut.edu.datingforballsports.view.HomePageView;
 import gdut.edu.datingforballsports.view.activity.AccountSettingActivity;
 import gdut.edu.datingforballsports.view.activity.EditPostActivity;
 import gdut.edu.datingforballsports.view.activity.LoginActivity;
+import gdut.edu.datingforballsports.view.activity.MainActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 
 public class HomePageFragment extends BaseFragment implements HomePageView {
@@ -34,6 +45,7 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
     private View view;
 
     private HomePagePresenter hPresenter;
+    private CircleImageView icon_ci;
     private RecyclerView recyclerView;
     private List<Post> list = new ArrayList<>();
     private User user;
@@ -46,6 +58,9 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
     private String token;
     private String RCmsg;
     public Handler mHandler;
+    private SharedPreferences sharedPreferences;
+    private ActivityResultLauncher<Intent> launcher;
+    private FragmentTransaction ft;
 
     public HomePageFragment() {
     }
@@ -53,6 +68,12 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
     public static HomePageFragment newInstance() {
         HomePageFragment fragment = new HomePageFragment();
         return fragment;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("HomePageFragmentdestroy:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
     }
 
     @Override
@@ -76,7 +97,13 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
                 }
             }
         };
-
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                icon_ci.setImageURI(Uri.parse(sharedPreferences.getString("icon", null)));
+                ((TextView) (view.findViewById(R.id.homepage_username))).setText(sharedPreferences.getString("userName", null));
+            }
+        });
     }
 
     @Override
@@ -93,30 +120,40 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
         intent = this.getActivity().getIntent();
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
+        icon_ci = view.findViewById(R.id.homepage_profilePhoto);
+        sharedPreferences = getActivity().getSharedPreferences("user" + userId, getContext().MODE_PRIVATE);
         //hPresenter.getUserMessage(userId, token);
     }
 
     private void setView() {
-        //设置发布帖子的点击事件
+        icon_ci.setImageURI(Uri.parse(sharedPreferences.getString("icon", null)));
+        ((TextView) (view.findViewById(R.id.homepage_username))).setText(sharedPreferences.getString("userName", null));
+        buttonClick(icon_ci, view -> {
+            System.out.println("ddddddddddddddddddddddddddddddddd");
+            intent.putExtra("userId", userId);
+            intent.putExtra("token", token);
+            intent.setClass(this.getActivity(), AccountSettingActivity.class);
+            launcher.launch(intent);
+        });
         buttonClick(view.findViewById(R.id.homepage_publish_post), view -> {
-            startActivity(new Intent(this.getActivity(), EditPostActivity.class));
+            intent.putExtra("userId", userId);
+            intent.putExtra("token", token);
+            intent.setClass(this.getActivity(), EditPostActivity.class);
+            startActivity(intent);
         });
-        buttonClick(R.id.homepage_profilePhoto, view -> {
-            startActivity(new Intent(this.getActivity(), AccountSettingActivity.class));
-        });
-        buttonClick(R.id.homepage_trends, view -> {
+        buttonClick(view.findViewById(R.id.homepage_trends), view -> {
             setTabSelection(0);
         });
-        buttonClick(R.id.homepage_collect, view -> {
+        buttonClick(view.findViewById(R.id.homepage_collect), view -> {
             setTabSelection(1);
         });
 
         fm = getChildFragmentManager();
+        ft = fm.beginTransaction();
         setTabSelection(0);
     }
 
     private void setTabSelection(int index) {
-        FragmentTransaction ft = fm.beginTransaction();
         hideFragment(ft);
         switch (index) {
             case 0:

@@ -23,7 +23,7 @@ public class RegisterPresenter extends BasePresenter {
             if (EmailUtils.isEmail(registerView.getEmail().trim()) && registerView.getEmail().trim().length() <= 31) {
                 if (registerView.getPassword().equals(registerView.getPasswordAG())
                         && !registerView.getUserName().equals("") && !registerView.getPassword().equals("")
-                        && registerView.getSex().equals("") && !registerView.getBirthday().equals("")
+                        && !registerView.getSex().equals("") && !registerView.getBirthday().equals("")
                         && !registerView.getEmail().equals("") && !registerView.getPhoneNumber().equals("")) {
                     User user = new User(registerView.getUserName(), registerView.getPassword(), registerView.getImagePath(), registerView.getSex(),
                             registerView.getBirthday(), registerView.getEmail(), registerView.getPhoneNumber());

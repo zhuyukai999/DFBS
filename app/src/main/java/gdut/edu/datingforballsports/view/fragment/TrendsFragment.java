@@ -88,11 +88,10 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
     }
 
     private void setView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         recyclerView = (RecyclerView) view.findViewById(R.id.trends_recyclerView);
         recyclerView.setLayoutManager(linearLayoutManager);
         mCommonAdapter = new CommonAdapter<>(list, new CommonAdapter.OnBindDataListener<Post>() {
-
             @Override
             public void onBindViewHolder(Post model, CommonViewHolder viewHolder, int type, int position) {
                 viewHolder.setImageResource(R.id.post_item_logo,model.getPublisherLogo());

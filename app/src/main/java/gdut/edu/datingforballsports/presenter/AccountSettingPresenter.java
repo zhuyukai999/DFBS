@@ -34,8 +34,8 @@ public class AccountSettingPresenter extends BasePresenter {
                 ((AccountSettingModel) model).modifyAccount(userId, token, text, icon_uri, new AccountSettingListener() {
                     @Override
                     public void onSuccess() {
-                        String storePath = context.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
-                        GlideEngine.createGlideEngine().saveImage(context, icon_uri, storePath);
+                        /*String storePath = context.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
+                        GlideEngine.createGlideEngine().saveImage(context, icon_uri, storePath);*/
                         ((AccountSettingView) viewReference.get()).onSettingSuccess();
                     }
 

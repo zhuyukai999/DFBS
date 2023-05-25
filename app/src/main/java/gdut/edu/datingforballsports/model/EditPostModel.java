@@ -27,7 +27,10 @@ public class EditPostModel implements Model_ {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                listener.onSuccess();
+                /*if (response.body().string() != null) {
+                    listener.onSuccess();
+                }*/
+                listener.onFails("上传失败");
             }
         });
     }

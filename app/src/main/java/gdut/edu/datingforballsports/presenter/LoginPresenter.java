@@ -31,17 +31,16 @@ public class LoginPresenter extends BasePresenter {
                 public void run() {
                     ((LoginModel) model).sendLoginRequest(userName, password, new LoginListener() {
                         @Override
-                        public void onSuccess(int userId, String token, String msg, String icon) {
+                        public void onSuccess(int userId, String token, String msg, String icon, String userName) {
                             if (viewReference.get() != null) {
                                 String storePath = context.getFilesDir().getAbsolutePath() + "/user" + userId + "/icon" + "/user" + userId + ".png";
                                 GlideEngine.createGlideEngine().saveImage(context, icon, storePath);
-                                ((LoginView) viewReference.get()).onLoginSuccess(userId, token, icon);
+                                ((LoginView) viewReference.get()).onLoginSuccess(userId, token, storePath, userName);
                             }
                         }
 
                         @Override
                         public void onFails(String mag) {
-                            System.out.println("Presenter:" + Looper.myLooper() + "||||||||" + Looper.getMainLooper());
                             System.out.println("Presenter:" + Thread.currentThread().getId());
                             if (viewReference.get() != null) {
                                 ((LoginView) viewReference.get()).onLoginFails();

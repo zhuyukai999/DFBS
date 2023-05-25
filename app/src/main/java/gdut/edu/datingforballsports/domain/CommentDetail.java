@@ -13,6 +13,7 @@ public class CommentDetail {
     private boolean ifLike;
     private String createTime;
     private List<ReplyDetail> replyList;
+    private int postId;
 
     public CommentDetail() {
     }
@@ -108,5 +109,13 @@ public class CommentDetail {
 
     public void setReplyList(List<ReplyDetail> replyList) {
         this.replyList = replyList;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 }

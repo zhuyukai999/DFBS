@@ -58,6 +58,7 @@ public class GPSUtils {
 //
 //            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);      // GPS芯片定位 需要开启GPS
 //            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);      // 利用网络定位 需要开启GPS
+            System.out.println("location:" + location);
             location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);      // 其他应用使用定位更新了定位信息 需要开启GPS
         }
         if (location != null) {
@@ -76,7 +77,7 @@ public class GPSUtils {
         OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.map.baidu.com/geocoder").newBuilder();
         urlBuilder.addQueryParameter("output", "json");
-        urlBuilder.addQueryParameter("location", "json");
+        urlBuilder.addQueryParameter("location", location);
         urlBuilder.addQueryParameter("ak", "esNPFDwwsXWtsQfw4NMNmur1");
         Request request = new Request.Builder()
                 .url(urlBuilder.build())

@@ -7,7 +7,7 @@ public interface LoginView extends View_ {
 
     String getPassword();
 
-    void onLoginSuccess(int userId,String token,String icon);
+    void onLoginSuccess(int userId,String token,String icon,String userName);
 
     void onLoginFails();
 

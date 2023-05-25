@@ -123,7 +123,7 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
             childHolder.name.setText(replyUser + ":");
         }
         childHolder.content.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getContent());
-        childHolder.createTime.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getCreateDate());
+        childHolder.createTime.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getCreateTime());
         int likeNum = commentBeanList.get(groupPosition).getReplyList().get(childPosition).getLikeNum();
         childHolder.likeNum.setText(likeNum);
         childHolder.likeIcon.setOnClickListener(new View.OnClickListener() {

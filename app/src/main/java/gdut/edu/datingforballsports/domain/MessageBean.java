@@ -6,14 +6,32 @@ public class MessageBean {
     private int otherOrChatRoomId;
     private String otherOrChatRoomName;
     private String otherOrChatRoomLogo;
+
     private String publishTime;
     private String coverContent;
+    private boolean read;
 
     public MessageBean() {
     }
 
+    public MessageBean(int type, int otherOrChatRoomId, String otherOrChatRoomName, String otherOrChatRoomLogo, String publishTime, String coverContent) {
+        this.type = type;
+        this.otherOrChatRoomId = otherOrChatRoomId;
+        this.otherOrChatRoomName = otherOrChatRoomName;
+        this.otherOrChatRoomLogo = otherOrChatRoomLogo;
+        this.publishTime = publishTime;
+        this.coverContent = coverContent;
+    }
+
     public MessageBean(int id, int type, int otherOrChatRoomId, String otherOrChatRoomName, String otherOrChatRoomLogo) {
         this.id = id;
+        this.type = type;
+        this.otherOrChatRoomId = otherOrChatRoomId;
+        this.otherOrChatRoomName = otherOrChatRoomName;
+        this.otherOrChatRoomLogo = otherOrChatRoomLogo;
+    }
+
+    public MessageBean(int type, int otherOrChatRoomId, String otherOrChatRoomName, String otherOrChatRoomLogo) {
         this.type = type;
         this.otherOrChatRoomId = otherOrChatRoomId;
         this.otherOrChatRoomName = otherOrChatRoomName;
@@ -75,4 +93,6 @@ public class MessageBean {
     public void setCoverContent(String coverContent) {
         this.coverContent = coverContent;
     }
+
+
 }

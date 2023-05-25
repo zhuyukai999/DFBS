@@ -23,10 +23,9 @@ public class PostDetailsModel implements Model_ {
     private String msg = null;
 
     public void determineUserIdAndToken(int userId, String token, int postId, PostDetailsListener listener) {
-        String path = "http://192.168.126.1:8080/user/detailPost";
+        String path = "http://192.168.126.1:8080/post/detailPost/" + userId;
         Map<String, Integer> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("token", postId);
+        map.put("postId", postId);
         HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

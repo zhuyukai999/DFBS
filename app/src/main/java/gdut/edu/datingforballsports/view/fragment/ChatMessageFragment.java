@@ -1,6 +1,9 @@
 package gdut.edu.datingforballsports.view.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,15 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import gdut.edu.datingforballsports.R;
+import gdut.edu.datingforballsports.dao.Impl.MessageDaoImpl;
+import gdut.edu.datingforballsports.dao.MessageDao;
 import gdut.edu.datingforballsports.domain.ChatMessage;
 import gdut.edu.datingforballsports.domain.MessageBean;
+import gdut.edu.datingforballsports.domain.User;
 import gdut.edu.datingforballsports.presenter.ChatMessagePresenter;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.ChatMessageView;
@@ -28,6 +41,9 @@ import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
 public class ChatMessageFragment extends BaseFragment implements ChatMessageView {
     private static final int LOAD_MESSAGEBEAN_SUCCEED = 1;
     private static final int LOAD_FAILED = 2;
+    private static final int LOAD_ONLINEMESSAGE_SUCCEED = 3;
+    private ChatMessageReceiver chatMessageReceiver;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private View view;
     private ChatMessagePresenter cPresenter;
@@ -39,6 +55,8 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
     private String token;
     private String RCmsg;
     public Handler mHandler;
+    private Gson gson;
+    MessageDao messageDao;
 
     public ChatMessageFragment() {
     }
@@ -63,6 +81,31 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
                         list = TextUtils.castList(message.obj, MessageBean.class);
                         setView();
                         break;
+                    case LOAD_ONLINEMESSAGE_SUCCEED:
+                        ChatMessage chatMessage = (ChatMessage) message.obj;
+                        switch (chatMessage.getType()) {
+                            case 1:
+                                if (messageDao.getMessageBeanCountByIdAndType(1, chatMessage.getOtherOrChatRoomId()) == 1) {
+                                    mCommonAdapter.insert(new MessageBean(chatMessage.getType(), chatMessage.getOtherOrChatRoomId(),
+                                            chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                            chatMessage.getPublishTime(), chatMessage.getContent()), list.size());
+                                }
+                                break;
+                            case 2:
+                                if (messageDao.getMessageBeanCountByIdAndType(2, chatMessage.getOtherOrChatRoomId()) == 1) {
+                                    mCommonAdapter.insert(new MessageBean(chatMessage.getType(), chatMessage.getOtherOrChatRoomId(),
+                                            chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                            chatMessage.getPublishTime(), chatMessage.getContent()), list.size());
+                                }
+                                break;
+                            case 3:
+                                mCommonAdapter.insert(new MessageBean(chatMessage.getType(), chatMessage.getOtherOrChatRoomId(),
+                                        chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                        chatMessage.getPublishTime(), "请求添加为好友"), list.size());
+                                mCommonAdapter.notifyItemChanged(list.size());
+                                recyclerView.notifyAll();
+                                break;
+                        }
                 }
             }
         };
@@ -79,9 +122,10 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
     private void setData() {
         this.cPresenter = new ChatMessagePresenter(this, view.getContext());
         intent = this.getActivity().getIntent();
+        messageDao = new MessageDaoImpl(getActivity().getApplicationContext());
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
-        cPresenter.getList(userId, token);
+        cPresenter.getList();
     }
 
     private void setView() {
@@ -89,12 +133,6 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
         recyclerView = (RecyclerView) view.findViewById(R.id.message_list_forumList);
         recyclerView.setLayoutManager(linearLayoutManager);
         mCommonAdapter = new CommonAdapter<>(list, new CommonAdapter.OnMoreBindDataListener<MessageBean>() {
-
-            @Override
-            public int getItemType(int position) {
-                return list.get(position).getType();
-            }
-
             @Override
             public void onBindViewHolder(MessageBean model, CommonViewHolder viewHolder, int type, int position) {
                 switch (type) {
@@ -103,12 +141,18 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
                         viewHolder.setText(R.id.message_item_friend_userName, model.getOtherOrChatRoomName());
                         viewHolder.setText(R.id.message_item_friend_time, model.getPublishTime());
                         viewHolder.setText(R.id.message_item_friend_content, model.getCoverContent());
+                        viewHolder.onItemClick(viewHolder.itemView, view -> {
+
+                        });
                         break;
                     case 2:
                         viewHolder.setImageResource(R.id.message_item_friend_logo, model.getOtherOrChatRoomLogo());
                         viewHolder.setText(R.id.message_item_friend_userName, model.getOtherOrChatRoomName());
                         viewHolder.setText(R.id.message_item_friend_time, model.getPublishTime());
                         viewHolder.setText(R.id.message_item_friend_content, model.getCoverContent());
+                        viewHolder.onItemClick(viewHolder.itemView, view -> {
+
+                        });
                         break;
                     case 3:
                         viewHolder.setImageResource(R.id.message_require_friend_item_friend_logo, model.getOtherOrChatRoomLogo());
@@ -128,6 +172,11 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
             }
 
             @Override
+            public int getItemType(int position) {
+                return list.get(position).getType();
+            }
+
+            @Override
             public int getLayoutId(int type) {
                 switch (type) {
                     case 1:
@@ -140,10 +189,33 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
                 return R.layout.message_list;
             }
         });
+        recyclerView.setAdapter(mCommonAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private class ChatMessageReceiver extends BroadcastReceiver {
+
+        public ChatMessageReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ChatMessage chatMessage = (ChatMessage) intent.getSerializableExtra("chatMessage");
+            Message msg = Message.obtain();
+            msg.what = LOAD_ONLINEMESSAGE_SUCCEED; // 消息标识
+            msg.obj = chatMessage;
+            mHandler.sendMessage(msg);
+        }
+    }
+
+    private void doRegisterReceiver() {
+        chatMessageReceiver = new ChatMessageReceiver();
+        IntentFilter filter = new IntentFilter("gdut.edu.datingforballsports.servicecallback.chatContent");
+        getActivity().getApplicationContext().registerReceiver(chatMessageReceiver, filter);
     }
 
     @Override
-    public void onTrendsLoadSuccess(MessageBean list, String RCmsg) {
+    public void onLoadMessageBeanSuccess(List<MessageBean> list, String RCmsg) {
         Message msg = Message.obtain();
         msg.what = LOAD_MESSAGEBEAN_SUCCEED; // 消息标识
         msg.obj = list;

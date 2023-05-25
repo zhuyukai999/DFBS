@@ -2,6 +2,7 @@ package gdut.edu.datingforballsports.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,28 +46,33 @@ public class LoginModel implements Model_ {
                 if (TextUtils.isEmpty(responseData)) {
                     msg = "用户名或密码错误";
                     listener.onFails(msg);
+                    return;
                 }
                 HashMap<String, String> dataMap = new HashMap<>();
                 int userId = -1;
                 String token = null;
                 String icon = null;
+                String userName = null;
                 try {
                     System.out.println("responseData:" + responseData);
                     /*JsonObject returnData = new JsonParser().parse(responseData).getAsJsonObject();
                     returnData.get("userId").getAsString();
                     returnData.get("token").getAsString();*/
-                    JSONArray jsonArray = new JSONArray(responseData);
-                    userId = Integer.parseInt(String.valueOf(jsonArray.getJSONObject(0)));
-                    token = String.valueOf(jsonArray.getJSONObject(1));
-                    icon = String.valueOf(jsonArray.getJSONObject(2));
+                    JSONObject jsonObject = new JSONObject(responseData);
+                    System.out.println("jsonObject:" + jsonObject);
+                    userId = jsonObject.getInt("userId");
+                    token = jsonObject.getString("token");
+                    icon = jsonObject.getString("icon");
+                    userName = jsonObject.getString("userName");
                 } catch (JSONException e) {
                     msg = "ERROR";
                     listener.onFails(msg);
                     e.printStackTrace();
+                    return;
                 }
                 msg = "登录成功";
                 //还要有token
-                listener.onSuccess(userId, token, msg, icon);
+                listener.onSuccess(userId, token, msg, icon, userName);
             }
         });
     }

@@ -15,6 +15,8 @@ public class Post implements Serializable {
     private boolean ifLike;
     private boolean ifCollect;
     private Date createTime;
+    private String ballType;
+    private String city;
     private List<String> imagePaths;
 
     public Post() {
@@ -113,6 +115,21 @@ public class Post implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getBallType() {
+        return ballType;
+    }
+
+    public void setBallType(String ballType) {
+        this.ballType = ballType;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public List<String> getImagePaths() {
         return imagePaths;

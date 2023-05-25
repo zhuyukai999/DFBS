@@ -11,7 +11,6 @@ import java.util.List;
 
 import gdut.edu.datingforballsports.dao.MessageDao;
 import gdut.edu.datingforballsports.domain.ChatMessage;
-import gdut.edu.datingforballsports.domain.ChatRoomMessage;
 import gdut.edu.datingforballsports.domain.MessageBean;
 
 public class MessageDaoImpl implements MessageDao {
@@ -23,8 +22,8 @@ public class MessageDaoImpl implements MessageDao {
             @Override
             public void onCreate(SQLiteDatabase db) {
                 db.execSQL("create table messageBean(id INTEGER not null PRIMARY KEY autoincrement,type INTEGER not null,otherOrChatRoomId INTEGER not null,otherOrChatRoomName VARCHAR(20) not null,otherOrChatRoomLogo text not null)");
-                db.execSQL("create table chatMessage(id INTEGER not null PRIMARY KEY autoincrement,otherOrChatRoomId INTEGER not null,content text not null,publishTime datetime not null,statue INTEGER not null,publisher INTEGER not null)");
-                db.execSQL("create table chatRoomMessage(id INTEGER not null PRIMARY KEY autoincrement,otherOrChatRoomId INTEGER not null,content text not null,publishTime datetime not null,statue INTEGER not null,publisher INTEGER not null,publisherId INTEGER not null,publisherName VARCHAR(20) not null,publisherLogo text not null)");
+                db.execSQL("create table chatMessage(id INTEGER not null PRIMARY KEY autoincrement,otherOrChatRoomId INTEGER not null,content text not null,publishTime VARCHAR(15) not null,type INTEGER not null,publisherId INTEGER not null)");
+                db.execSQL("create table chatRoomMessage(id INTEGER not null PRIMARY KEY autoincrement,otherOrChatRoomId INTEGER not null,content text not null,publishTime VARCHAR(15) not null,type INTEGER not null,publisherId INTEGER not null,publisherName VARCHAR(20) not null,publisherLogo text not null)");
 
             }
 
@@ -70,10 +69,26 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
+    public int getMessageBeanCountByIdAndType(int type, int messageBeanId) {
+        String sql = "select count(*) from chatMessage where type=? and otherOrChatRoomId=?";
+        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(type),String.valueOf(messageBeanId)});
+        List<ChatMessage> list = new ArrayList<>();
+        int count = 0;
+        if (cursor.moveToNext()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    @Override
     public long insertChatMessage(ChatMessage chatMessage) {
         ContentValues newValue = new ContentValues();
+        newValue.put("otherOrChatRoomId", chatMessage.getOtherOrChatRoomId());
         newValue.put("content", chatMessage.getContent());
         newValue.put("publishTime", chatMessage.getPublishTime());
+        newValue.put("type", chatMessage.getType());
+        newValue.put("publisherId", chatMessage.getPublisherId());
         return db.insert("chatMessage", null, newValue);
     }
 
@@ -92,21 +107,23 @@ public class MessageDaoImpl implements MessageDao {
             int otherOrChatRoomId = cursor.getColumnIndex("otherOrChatRoomId");
             int content = cursor.getColumnIndex("content");
             int publishTime = cursor.getColumnIndex("publishTime");
-            int statue = cursor.getColumnIndex("statue");
-            int publisher = cursor.getColumnIndex("publisher");
+            int type = cursor.getColumnIndex("type");
+            int publisherId = cursor.getColumnIndex("publisherId");
             list.add(new ChatMessage(cursor.getInt(id),cursor.getInt(otherOrChatRoomId),
                     cursor.getString(content), cursor.getString(publishTime),
-                    cursor.getInt(statue),cursor.getInt(publisher)));
+                    cursor.getInt(type),cursor.getInt(publisherId)));
         }
         cursor.close();
         return list;
     }
 
     @Override
-    public long insertChatRoomMessage(ChatRoomMessage chatRoomMessage) {
+    public long insertChatRoomMessage(ChatMessage chatRoomMessage) {
         ContentValues newValue = new ContentValues();
+        newValue.put("otherOrChatRoomId", chatRoomMessage.getOtherOrChatRoomId());
         newValue.put("content", chatRoomMessage.getContent());
         newValue.put("publishTime", chatRoomMessage.getPublishTime());
+        newValue.put("type", chatRoomMessage.getType());
         newValue.put("publisherId", chatRoomMessage.getPublisherId());
         newValue.put("publisherName", chatRoomMessage.getPublisherName());
         newValue.put("publisherLogo", chatRoomMessage.getPublisherLogo());
@@ -119,22 +136,22 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public List<ChatRoomMessage> getChatRoomMessage(int chatRoomId) {
+    public List<ChatMessage> getChatRoomMessage(int chatRoomId) {
         String sql = "select * from chatMessage where id=?";
         Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(chatRoomId)});
-        List<ChatRoomMessage> list = new ArrayList<>();
+        List<ChatMessage> list = new ArrayList<>();
         while (cursor.moveToNext()) {
             int id = cursor.getColumnIndex("id");
             int otherOrChatRoomId = cursor.getColumnIndex("otherOrChatRoomId");
             int content = cursor.getColumnIndex("content");
             int publishTime = cursor.getColumnIndex("publishTime");
-            int statue = cursor.getColumnIndex("statue");
+            int type = cursor.getColumnIndex("type");
             int publisher = cursor.getColumnIndex("publisher");
             int publisherId = cursor.getColumnIndex("publisherId");
             int publisherName = cursor.getColumnIndex("publisherName");
             int publisherLogo = cursor.getColumnIndex("publisherLogo");
-            list.add(new ChatRoomMessage(cursor.getInt(id),cursor.getInt(otherOrChatRoomId),
-                    cursor.getString(content), cursor.getString(publishTime), cursor.getInt(statue),cursor.getInt(publisher),
+            list.add(new ChatMessage(cursor.getInt(id),cursor.getInt(otherOrChatRoomId),
+                    cursor.getString(content), cursor.getString(publishTime), cursor.getInt(type),
                     cursor.getInt(publisherId), cursor.getString(publisherName), cursor.getString(publisherLogo)));
         }
         cursor.close();

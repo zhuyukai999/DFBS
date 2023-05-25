@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -39,6 +40,7 @@ import gdut.edu.datingforballsports.R;
  * 在项目中创建一个GlideEngine类
  * Glide加载引擎
  */
+
 public class GlideEngine implements ImageEngine {
 
     /**
@@ -201,12 +203,17 @@ public class GlideEngine implements ImageEngine {
     }
 
     public void saveImage(Context context, String sourceUrl, String saveUrl) {
-        if(sourceUrl.equals(saveUrl)){
+        if (sourceUrl.equals(saveUrl)) {
             return;
         }
+        System.out.println("sourceUrl:" + sourceUrl);
         Glide.with(context).load(sourceUrl)
                 .placeholder(com.luck.picture.lib.R.drawable.ps_image_placeholder)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(new CustomTarget<Drawable>() {
+                    private FileOutputStream out;
+
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                         if (resource == null)
@@ -216,14 +223,23 @@ public class GlideEngine implements ImageEngine {
                             if (file.exists()) {
                                 file.delete();
                             }
-                            if (!file.exists())
+                            if (!file.exists()) {
+                                file.getParentFile().mkdirs();
                                 file.createNewFile();
-                            FileOutputStream out = null;
+                            }
                             out = new FileOutputStream(file);
                             ((BitmapDrawable) resource).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out);
                             out.close();
                         } catch (IOException e) {
                             e.printStackTrace();
+                        } finally {
+                            if (out != null) {
+                                try {
+                                    out.close(); // 关闭流
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
 

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/homepage_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:orientation="vertical"
-    android:background="#FFFFFF">
-
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -20,20 +18,21 @@
             android:layout_height="60dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/homepage_profilePhoto"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
-                android:src="@drawable/default_personal_image"
-                android:adjustViewBounds="true" />
+                android:src="@drawable/default_personal_image" />
 
             <TextView
+                android:id="@+id/homepage_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="李华"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:text="李华"
                 android:textColor="#5B595A"
                 android:textSize="24dp" />
         </LinearLayout>
@@ -43,8 +42,8 @@
             android:layout_width="45dp"
             android:layout_height="43dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/add"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:src="@drawable/add" />
     </LinearLayout>
 
 
@@ -82,6 +81,6 @@
         android:id="@+id/homepage_post_list_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 </LinearLayout>

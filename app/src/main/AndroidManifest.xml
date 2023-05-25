@@ -30,11 +30,27 @@
             android:exported="false"
             android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
         <activity
-            android:name=".view.activity.RegisterActivity"
+            android:name=".view.activity.ChatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+        <activity
+            android:name=".view.activity.CoverActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+        <activity
+            android:name=".view.activity.EditPostActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+        <activity
+            android:name=".view.activity.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
         <activity
             android:name=".view.activity.PostDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+        <activity
+            android:name=".view.activity.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
         <activity

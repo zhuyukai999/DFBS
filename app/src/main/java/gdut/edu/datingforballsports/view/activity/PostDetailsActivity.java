@@ -85,8 +85,8 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
 
     private void setData() {
         this.pPresenter = new PostDetailsPresenter(this);
-        post = (Post) getIntent().getSerializableExtra("post");
         intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
     }

@@ -25,9 +25,8 @@ public class CollectModel implements Model_ {
 
     public void getCollectList(int userId, String token, CollectListener listener) {
         if (userId >= 1 && token != null) {
-            String path = "http://192.168.126.1:8080/user/getUserCollect";
+            String path = "http://192.168.126.1:8080/user/getUserCollect/" + userId;
             Map<String, String> map = new HashMap<>();
-            map.put("userId", String.valueOf(userId));
             HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
