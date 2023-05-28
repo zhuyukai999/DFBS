@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,7 @@ import gdut.edu.datingforballsports.util.GPSUtils;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.ForumListView;
 import gdut.edu.datingforballsports.view.Service.SocketService;
+import gdut.edu.datingforballsports.view.activity.OtherHomePageActivity;
 import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
@@ -57,6 +60,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
     private String city_buffer;
     private RecyclerView recyclerView;
     public Handler mHandler;
+    private Gson gson;
 
     public ForumListFragment() {
     }
@@ -69,6 +73,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("ForumListFragmentCreate:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -107,6 +112,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
         intent = this.getActivity().getIntent();
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
+        gson = new Gson();
         fPresenter.getList(userId, token);
     }
 
@@ -129,6 +135,17 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                 if (model.isIfLike()) {
                     viewHolder.setSelect(R.id.post_item_like_image, true);
                 }
+                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
+                    if(userId!=model.getPublisherId()){
+                        Intent intent = new Intent();
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("token", token);
+                        intent.putExtra("otherUserId", model.getPublisherId());
+                        intent.putExtra("otherUserName", model.getPublisherName());
+                        intent.putExtra("otherUserIcon", model.getPublisherLogo());
+                        viewHolder.jumpActivity(intent, OtherHomePageActivity.class);
+                    }
+                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_collect_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_collect_image);
                     model.setIfCollect(!model.isIfCollect());
@@ -149,26 +166,23 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                 });
                 viewHolder.onItemClick(viewHolder.itemView, view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    intent.putExtra("postId", model.getId());
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_comment_image), view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    intent.putExtra("postId", model.getId());
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
 
-                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
-
-                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_report), view -> {
 
                 });
@@ -183,7 +197,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
         recyclerView.setAdapter(mCommonAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        Switch viewById = view.findViewById(R.id.forum_list_content);
+        Switch viewById = view.findViewById(R.id.forum_list_switch);
         viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -239,6 +253,13 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
         msg.what = LOAD_SUCCEED; // 消息标识
         msg.obj = list;
         mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("ForumListFragmentdestroy:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+
     }
 
     @Override

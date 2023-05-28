@@ -23,10 +23,11 @@ public class ForumListModel implements Model_ {
     private String msg = null;
 
     public void getForumList(int userId, String token, ForumListListener listener) {
-        if (userId >= 1) {
+        if (userId >= 1 && token != null) {
             String path = "http://192.168.126.1:8080/forum/getForumPost/" + userId;
             Map<String, String> map = new HashMap<>();
             HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
+
                 @Override
                 public void onFailure(Call call, IOException e) {
                     msg = "请求失败";
@@ -42,15 +43,16 @@ public class ForumListModel implements Model_ {
                         return;
                     }
                     Gson gson = new Gson();
+                    Post post;
                     ArrayList<Post> postList = new ArrayList<>();
                     try {
                         JSONArray jsonArray = new JSONArray(responseData);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                            Post post = gson.fromJson(String.valueOf(jsonObject), Post.class);
+                            post = gson.fromJson(String.valueOf(jsonObject), Post.class);
                             postList.add(post);
-                            listener.onSuccess(postList, msg);
                         }
+                        listener.onSuccess(postList, msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -92,13 +94,14 @@ public class ForumListModel implements Model_ {
                     Gson gson = new Gson();
                     ArrayList<Post> postList = new ArrayList<>();
                     try {
+                        System.out.println("responseData:"+responseData);
                         JSONArray jsonArray = new JSONArray(responseData);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                             Post post = gson.fromJson(String.valueOf(jsonObject), Post.class);
                             postList.add(post);
-                            listener.onSuccess(postList, msg);
                         }
+                        listener.onSuccess(postList, msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

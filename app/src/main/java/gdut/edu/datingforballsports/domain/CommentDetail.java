@@ -31,6 +31,18 @@ public class CommentDetail {
         this.replyList = replyList;
     }
 
+    public CommentDetail(int publisherId, String publisherName, String publisherLogo, String content, int likeNum, int commentNum, boolean ifLike, String createTime, int postId) {
+        this.publisherId = publisherId;
+        this.publisherName = publisherName;
+        this.publisherLogo = publisherLogo;
+        this.content = content;
+        this.likeNum = likeNum;
+        this.commentNum = commentNum;
+        this.ifLike = ifLike;
+        this.createTime = createTime;
+        this.postId = postId;
+    }
+
     public int getId() {
         return id;
     }

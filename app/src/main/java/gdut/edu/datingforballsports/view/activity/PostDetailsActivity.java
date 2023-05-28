@@ -1,6 +1,7 @@
 package gdut.edu.datingforballsports.view.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import gdut.edu.datingforballsports.domain.CommentDetail;
 import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.domain.ReplyDetail;
 import gdut.edu.datingforballsports.presenter.PostDetailsPresenter;
+import gdut.edu.datingforballsports.util.DateFormatUtil;
 import gdut.edu.datingforballsports.util.GlideEngine;
 import gdut.edu.datingforballsports.view.CommentExpandableListView;
 import gdut.edu.datingforballsports.view.PostDetailsView;
@@ -44,6 +46,7 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
     private static final String TAG = "MainActivity";
     private static final int LOAD_SUCCEED = 1;
     private static final int LOAD_FAILED = 2;
+    private static final int UPLOAD_SUCCEED = 3;
     private androidx.appcompat.widget.Toolbar toolbar;
     private TextView bt_comment;
     private CommentExpandableListView expandableListView;
@@ -56,9 +59,14 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
     private Post post;
     private Intent intent;
     private int userId = -1;
+    private String username;
+    private String logo_url;
+    private int postId;
     private String token;
     private String RCmsg;
     public Handler mHandler;
+    private Gson gson;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,10 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
                         initExpandableListView(commentsList);
                         break;
                     case LOAD_FAILED:
-                        Toast.makeText(getApplicationContext(), RCmsg, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), String.valueOf(message.obj), Toast.LENGTH_LONG).show();
+                        break;
+                    case UPLOAD_SUCCEED:
+                        Toast.makeText(getApplicationContext(), String.valueOf(message.obj), Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -86,9 +97,15 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
     private void setData() {
         this.pPresenter = new PostDetailsPresenter(this);
         intent = getIntent();
-        post = (Post) intent.getSerializableExtra("post");
+        gson = new Gson();
+        String post_s = intent.getStringExtra("post");
+        post = gson.fromJson(post_s, Post.class);
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
+        postId = post.getId();
+        sharedPreferences = getSharedPreferences("user" + userId, MODE_PRIVATE);
+        logo_url = sharedPreferences.getString("icon", null);
+        username = sharedPreferences.getString("userName", null);
     }
 
     private void setView() {
@@ -101,12 +118,12 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("详情");
-        GlideEngine.createGlideEngine().loadItemNetImage(getApplicationContext(), post.getPublisherLogo(), findViewById(R.id.detail_page_userLogo));
+        GlideEngine.createGlideEngine().loadNetImage(getApplicationContext(), post.getPublisherLogo(), findViewById(R.id.detail_page_userLogo));
         ((TextView) findViewById(R.id.detail_page_userName)).setText(post.getPublisherName());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        ((TextView) findViewById(R.id.detail_page_time)).setText(sdf.format(post.getCreateTime()));
+        ((TextView) findViewById(R.id.detail_page_time)).setText(post.getCreateTime());
         ((TextView) findViewById(R.id.detail_page_story)).setText(post.getContent());
-        ((TextView) findViewById(R.id.post_detail_like_num)).setText(post.getLikeNum());
+        ((TextView) findViewById(R.id.post_detail_like_num)).setText(String.valueOf(post.getLikeNum()));
         if (post.isIfLike()) {
             findViewById(R.id.post_detail_like_image).setSelected(true);
         }
@@ -160,7 +177,6 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
 
             }
         });
-
     }
 
     @Override
@@ -194,7 +210,6 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
         behavior.setPeekHeight(commentView.getMeasuredHeight());
 
         bt_comment.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 String commentContent = commentText.getText().toString().trim();
@@ -202,8 +217,9 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
 
                     //commentOnWork(commentContent);
                     dialog.dismiss();
-                    CommentDetail detailBean = new CommentDetail();
+                    CommentDetail detailBean = new CommentDetail(userId, username, logo_url, commentContent, 0, 0, false, DateFormatUtil.getCurrentDateString("yyyy-MM-dd HH:mm"), postId);
                     adapter.addTheCommentData(detailBean);
+                    pPresenter.uploadComment(userId, token, detailBean);
                     Toast.makeText(getApplicationContext(), "评论成功", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -250,10 +266,10 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
             public void onClick(View view) {
                 String replyContent = commentText.getText().toString().trim();
                 if (!TextUtils.isEmpty(replyContent)) {
-
                     dialog.dismiss();
-                    ReplyDetail detailBean = new ReplyDetail("小红", replyContent);
+                    ReplyDetail detailBean = new ReplyDetail(username, userId, replyContent, 0, false, DateFormatUtil.getCurrentDateString("yyyy-MM-dd HH:mm"), commentsList.get(position).getId());
                     adapter.addTheReplyData(detailBean, position);
+                    pPresenter.uploadCommentReply(userId, token, detailBean);
                     expandableListView.expandGroup(position);
                     Toast.makeText(getApplicationContext(), "回复成功", Toast.LENGTH_SHORT).show();
                 } else {
@@ -294,7 +310,21 @@ public class PostDetailsActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public void onLoadFails(String RCmsg) {
-        this.RCmsg = RCmsg;
+    public void onLoadFails(String msg_) {
+        Message msg = Message.obtain();
+        msg.what = LOAD_FAILED; // 消息标识
+        msg.obj = msg_;
+        mHandler.sendMessage(msg);
+
     }
+
+    @Override
+    public void onLoadSuccess(String msg_) {
+        Message msg = Message.obtain();
+        msg.what = UPLOAD_SUCCEED; // 消息标识
+        msg.obj = msg_;
+        mHandler.sendMessage(msg);
+    }
+
+
 }

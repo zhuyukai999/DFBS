@@ -5,8 +5,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -25,34 +26,46 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Datingforballsports"
         android:usesCleartextTraffic="true">
+
+        <service
+            android:name=".view.Service.SocketService"
+            android:enabled="true"
+            android:exported="true" />
         <activity
             android:name=".view.activity.AccountSettingActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:launchMode="standard"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.ChatActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.CoverActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.EditPostActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:launchMode="standard"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
+        <activity
+            android:name=".view.activity.OtherHomePageActivity"
+            android:exported="false"
+            android:launchMode="standard"
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.PostDetailsActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.RegisterActivity"
             android:exported="false"
-            android:theme="@style/Theme.Datingforballsports.NoActionBar"/>
+            android:theme="@style/Theme.Datingforballsports.NoActionBar" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true"

@@ -9,6 +9,7 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
@@ -27,66 +28,7 @@ import gdut.edu.datingforballsports.util.ThreadUtils;
 public class SocketService extends Service {
     private int userId;
     private URI uri;
-    public JWebSocketClient client = new JWebSocketClient(uri) {
-        @Override
-        public void onOpen(ServerHandshake handshakedata) {
-
-        }
-
-        @Override
-        public void onMessage(String message) {
-            Gson gson = new Gson();
-            ChatMessage chatMessage;
-            JSONArray jsonArray = null;
-            MessageDao messageDao = new MessageDaoImpl(getApplicationContext());
-            Intent intent;
-            try {
-                JSONObject jsonObject = new JSONObject(message);
-                chatMessage = gson.fromJson(String.valueOf(jsonObject), ChatMessage.class);
-                switch (chatMessage.getType()) {
-                    case 1:
-                        messageDao.insertChatMessage(chatMessage);
-                        if (messageDao.getMessageBeanCountByIdAndType(1, chatMessage.getOtherOrChatRoomId()) == 0) {
-                            messageDao.insertMessageBean(new MessageBean(1, chatMessage.getOtherOrChatRoomId(),
-                                    chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
-                                    chatMessage.getPublishTime(), chatMessage.getContent()));
-                        }
-                        break;
-                    case 2:
-                        messageDao.insertChatRoomMessage(chatMessage);
-                        if (messageDao.getMessageBeanCountByIdAndType(2, chatMessage.getOtherOrChatRoomId()) == 0) {
-                            messageDao.insertMessageBean(new MessageBean(2, chatMessage.getOtherOrChatRoomId(),
-                                    chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
-                                    chatMessage.getPublishTime(), chatMessage.getContent()));
-                        }
-                        break;
-                    case 3:
-                        messageDao.insertMessageBean(new MessageBean(3, chatMessage.getOtherOrChatRoomId(),
-                                chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
-                                chatMessage.getPublishTime(), chatMessage.getContent()));
-                        break;
-                }
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("chatMessage", chatMessage);
-                intent = new Intent();
-                intent.setAction("gdut.edu.datingforballsports.servicecallback.chatContent");
-                intent.putExtra("bundle", bundle);
-                sendBroadcast(intent);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onClose(int code, String reason, boolean remote) {
-
-        }
-
-        @Override
-        public void onError(Exception ex) {
-
-        }
-    };
+    public JWebSocketClient client;
 
     private JWebSocketClientBinder mBinder = new JWebSocketClientBinder();
 
@@ -102,11 +44,93 @@ public class SocketService extends Service {
         return mBinder;
     }
 
+    public void sendMsg(String msg) {
+        if (null != client) {
+            System.out.println("JWebSocketClientService" + "发送的消息：" + msg);
+            client.send(msg);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        System.out.println("SocketServiceCreate---------------------------------------");
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        System.out.println("SocketServiceStartCommand---------------------------------------");
         try {
             userId = intent.getIntExtra("userId", -1);
+            System.out.println("intent.getStringExtra(\"uri\"):" + intent.getStringExtra("uri"));
             uri = URI.create(intent.getStringExtra("uri"));
+            client = new JWebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake handshakedata) {
+
+                }
+
+                @Override
+                public void onMessage(String message) {
+                    Gson gson = new Gson();
+                    ChatMessage chatMessage;
+                    MessageDao messageDao = new MessageDaoImpl(getApplicationContext());
+                    Intent intent;
+                    try {
+                        JSONArray jsonArray = new JSONArray(message);
+                        String type = ((JSONObject) (jsonArray.get(0))).getString("type");
+                        if (type.equals("matching")) {
+
+                        } else if (type.equals("chat")) {
+                            JSONObject jsonObject = new JSONObject((String) jsonArray.get(1));
+                            chatMessage = gson.fromJson(String.valueOf(jsonObject), ChatMessage.class);
+                            switch (chatMessage.getType()) {
+                                case 1:
+                                    messageDao.insertChatMessage(chatMessage);
+                                    if (messageDao.getMessageBeanCountByIdAndType(1, chatMessage.getOtherOrChatRoomId()) == 0) {
+                                        messageDao.insertMessageBean(new MessageBean(1, chatMessage.getOtherOrChatRoomId(),
+                                                chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                                chatMessage.getPublishTime(), chatMessage.getContent()));
+                                    }
+                                    break;
+                                case 2:
+                                    messageDao.insertChatRoomMessage(chatMessage);
+                                    if (messageDao.getMessageBeanCountByIdAndType(2, chatMessage.getOtherOrChatRoomId()) == 0) {
+                                        messageDao.insertMessageBean(new MessageBean(2, chatMessage.getOtherOrChatRoomId(),
+                                                chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                                chatMessage.getPublishTime(), chatMessage.getContent()));
+                                    }
+                                    break;
+                                case 3:
+                                    messageDao.insertMessageBean(new MessageBean(3, chatMessage.getOtherOrChatRoomId(),
+                                            chatMessage.getOtherOrChatRoomName(), chatMessage.getOtherOrChatRoomLogo(),
+                                            chatMessage.getPublishTime(), chatMessage.getContent()));
+                                    break;
+                            }
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("chatMessage", chatMessage);
+                            intent = new Intent();
+                            intent.setAction("gdut.edu.datingforballsports.servicecallback.chatContent");
+                            intent.putExtra("bundle", bundle);
+                            sendBroadcast(intent);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+
+                }
+
+                @Override
+                public void onError(Exception ex) {
+
+                }
+            };
             client.connectBlocking();
             ThreadUtils.execute(new Runnable() {
                 @Override
@@ -129,6 +153,7 @@ public class SocketService extends Service {
 
     @Override
     public void onDestroy() {
+        System.out.println("SocketServiceDestroy---------------------------------------");
         try {
             if (null != client) {
                 client.close();

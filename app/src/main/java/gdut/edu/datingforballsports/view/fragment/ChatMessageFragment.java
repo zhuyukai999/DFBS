@@ -35,6 +35,8 @@ import gdut.edu.datingforballsports.domain.User;
 import gdut.edu.datingforballsports.presenter.ChatMessagePresenter;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.ChatMessageView;
+import gdut.edu.datingforballsports.view.activity.ChatActivity;
+import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
 
@@ -120,6 +122,7 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
     }
 
     private void setData() {
+        gson = new Gson();
         this.cPresenter = new ChatMessagePresenter(this, view.getContext());
         intent = this.getActivity().getIntent();
         messageDao = new MessageDaoImpl(getActivity().getApplicationContext());
@@ -142,7 +145,12 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
                         viewHolder.setText(R.id.message_item_friend_time, model.getPublishTime());
                         viewHolder.setText(R.id.message_item_friend_content, model.getCoverContent());
                         viewHolder.onItemClick(viewHolder.itemView, view -> {
-
+                            Intent intent = new Intent();
+                            intent.putExtra("userId", userId);
+                            intent.putExtra("token", token);
+                            String json = gson.toJson(model);
+                            intent.putExtra("messageBean", json);
+                            viewHolder.jumpActivity(intent, ChatActivity.class);
                         });
                         break;
                     case 2:

@@ -1,13 +1,16 @@
 package gdut.edu.datingforballsports.view.activity;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
@@ -30,6 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,7 +48,9 @@ import gdut.edu.datingforballsports.domain.CommentDetail;
 import gdut.edu.datingforballsports.domain.MessageBean;
 import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.model.ChatPresenter;
+import gdut.edu.datingforballsports.util.JWebSocketClient;
 import gdut.edu.datingforballsports.view.ChatView;
+import gdut.edu.datingforballsports.view.Service.SocketService;
 import gdut.edu.datingforballsports.view.adapter.CommentExpandAdapter;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.fragment.ChatMessageFragment;
@@ -68,6 +74,8 @@ public class ChatActivity extends BaseActivity implements ChatView {
     private List<ChatMessage> msgList;
     private MessageBean messageBean;
     private int otherId;
+    private String otherName;
+    private String otherIcon;
     private Intent intent;
     private int userId = -1;
     private String token;
@@ -77,6 +85,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
     public Handler mHandler;
     private Gson gson;
     private SharedPreferences sharedPreferences;
+    private ServiceConnection serviceConnection;
+    private SocketService.JWebSocketClientBinder binder;
+    private SocketService socketService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
                 switch (message.what) {
                     case LOAD_HISTORY_CHATMESSAGE_SUCCEED:
                         list = gdut.edu.datingforballsports.util.TextUtils.castList(message.obj, ChatMessage.class);
+                        setView();
                         break;
                     case LOAD_FAILED:
                         break;
@@ -101,18 +113,36 @@ public class ChatActivity extends BaseActivity implements ChatView {
             }
         };
         setData();
-        setView();
+        bindService();
     }
 
     private void setData() {
+        gson = new Gson();
         intent = getIntent();
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
-        messageBean = (MessageBean) getIntent().getSerializableExtra("messageBean");
-        otherId = messageBean.getOtherOrChatRoomId();
+        String bean = intent.getStringExtra("messageBean");
+        System.out.println("bean:" + bean);
+        messageBean = gson.fromJson(bean, MessageBean.class);
+        otherId = this.messageBean.getOtherOrChatRoomId();
+        otherName = this.messageBean.getOtherOrChatRoomName();
+        otherIcon = this.messageBean.getOtherOrChatRoomLogo();
         sharedPreferences = getApplicationContext().getSharedPreferences("user" + userId, MODE_PRIVATE);
         userName = sharedPreferences.getString("userName", "~~~");
         icon = sharedPreferences.getString("icon", null);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                binder = (SocketService.JWebSocketClientBinder) service;
+                socketService = binder.getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                binder = null;
+            }
+        };
+        doRegisterReceiver();
         cPresenter = new ChatPresenter(this, getApplicationContext());
         cPresenter.getList(userId, token, otherId);
     }
@@ -124,6 +154,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
             if (view.getId() == R.id.detail_page_do_comment) {
                 showCommentDialog();
             }
+        });
+        buttonClick(R.id.chat_edit_message, view -> {
+            showCommentDialog();
         });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -177,6 +210,11 @@ public class ChatActivity extends BaseActivity implements ChatView {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    private void bindService() {
+        Intent bindIntent = new Intent(this, SocketService.class);
+        bindService(bindIntent, serviceConnection, BIND_AUTO_CREATE);
+    }
+
 
     private void showCommentDialog() {
         dialog = new BottomSheetDialog(this);
@@ -198,11 +236,24 @@ public class ChatActivity extends BaseActivity implements ChatView {
                 String commentContent = commentText.getText().toString().trim();
                 if (!TextUtils.isEmpty(commentContent)) {
 
-                    Date date = new Date();
-                    ChatMessage chatMessage = new ChatMessage(userId, commentContent, sdf.format(date), 1, userId, userName, icon, userName, icon);
-                    //TODO
-                    mCommonAdapter.insert(chatMessage, list.size());
-                    cPresenter.storeMessage(chatMessage, otherId);
+                    try {
+                        Date date = new Date();
+                        JSONArray jsonArray = new JSONArray();
+                        JSONObject type = new JSONObject();
+                        type.put("type", "chat");
+                        ChatMessage chatMessage = new ChatMessage(userId, commentContent, sdf.format(date), 1, userId, userName, userName);
+                        mCommonAdapter.insert(chatMessage, list.size());
+                        cPresenter.storeMessage(chatMessage, otherId);
+                        String json = gson.toJson(chatMessage);
+                        JSONObject chat = new Gson().fromJson(json, JSONObject.class);
+                        jsonArray.put(type);
+                        jsonArray.put(chat);
+                        String msg = gson.toJson(jsonArray);
+                        socketService.sendMsg(msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     //commentOnWork(commentContent);
                     dialog.dismiss();
 
@@ -236,8 +287,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
         dialog.show();
     }
 
+
     @Override
-    public void onTrendsLoadSuccess(MessageBean list, String RCmsg) {
+    public void onChatMsgLoadSuccess(List<ChatMessage> list, String RCmsg) {
 
     }
 
@@ -247,7 +299,6 @@ public class ChatActivity extends BaseActivity implements ChatView {
     }
 
     private class ChatMessageReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             ChatMessage chatMessage = (ChatMessage) intent.getSerializableExtra("chatMessage");

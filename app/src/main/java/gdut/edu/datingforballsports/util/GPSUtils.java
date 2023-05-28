@@ -58,8 +58,8 @@ public class GPSUtils {
 //
 //            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);      // GPS芯片定位 需要开启GPS
 //            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);      // 利用网络定位 需要开启GPS
-            System.out.println("location:" + location);
             location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);      // 其他应用使用定位更新了定位信息 需要开启GPS
+            System.out.println("location:" + location);
         }
         if (location != null) {
             Log.i("GPS: ", "获取位置信息成功");

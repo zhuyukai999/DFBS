@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,18 +42,17 @@ import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 public class HomePageFragment extends BaseFragment implements HomePageView {
     private static final int LOAD_USER_MESSAGE_SUCCEED = 1;
     private static final int LOAD_FAILED = 2;
+    private static final int RENEW_USER_MESSAGE = 3;
 
     private View view;
 
     private HomePagePresenter hPresenter;
     private CircleImageView icon_ci;
-    private RecyclerView recyclerView;
-    private List<Post> list = new ArrayList<>();
     private User user;
-    private CommonAdapter<Post> mCommonAdapter;
     FragmentManager fm;
     private TrendsFragment trendsFragment;
     private CollectFragment collectFragment;
+    private Fragment currentFragment;
     private Intent intent;
     private int userId = -1;
     private String token;
@@ -79,6 +79,7 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("HomePageFragmentCreate1nnnnnnnnnnnnnnnnnnnnnnn");
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -86,13 +87,11 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
                 switch (message.what) {
                     case LOAD_FAILED:
                         Toast.makeText(getActivity(), RCmsg, Toast.LENGTH_LONG).show();
-                        //intent.setClass(getActivity(), LoginActivity.class);
                         break;
                     case LOAD_USER_MESSAGE_SUCCEED:
-                        // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        //transaction.replace(R.id.main_frame_layout, f1);
-                        // transaction.add(R.id.main_frame_layout, f4);
                         user = (User) message.obj;
+                        break;
+                    case RENEW_USER_MESSAGE:
                         break;
                 }
             }
@@ -100,9 +99,11 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                System.out.println("onActivityResult:执行力");
                 icon_ci.setImageURI(Uri.parse(sharedPreferences.getString("icon", null)));
                 ((TextView) (view.findViewById(R.id.homepage_username))).setText(sharedPreferences.getString("userName", null));
             }
+
         });
     }
 
@@ -129,13 +130,15 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
         icon_ci.setImageURI(Uri.parse(sharedPreferences.getString("icon", null)));
         ((TextView) (view.findViewById(R.id.homepage_username))).setText(sharedPreferences.getString("userName", null));
         buttonClick(icon_ci, view -> {
-            System.out.println("ddddddddddddddddddddddddddddddddd");
+            Intent intent = new Intent();
             intent.putExtra("userId", userId);
             intent.putExtra("token", token);
             intent.setClass(this.getActivity(), AccountSettingActivity.class);
             launcher.launch(intent);
+            System.out.println("cccccccccccccccccccccccccccccccccccccccc");
         });
         buttonClick(view.findViewById(R.id.homepage_publish_post), view -> {
+            Intent intent = new Intent();
             intent.putExtra("userId", userId);
             intent.putExtra("token", token);
             intent.setClass(this.getActivity(), EditPostActivity.class);
@@ -149,38 +152,43 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
         });
 
         fm = getChildFragmentManager();
-        ft = fm.beginTransaction();
         setTabSelection(0);
     }
 
     private void setTabSelection(int index) {
+        ft = fm.beginTransaction();
         hideFragment(ft);
         switch (index) {
             case 0:
                 if (trendsFragment == null) {
                     trendsFragment = TrendsFragment.newInstance();
                     ft.add(R.id.homepage_content, trendsFragment);
+                    ft.commit();
                 } else {
                     ft.show(trendsFragment);
+                    ft.commit();
                 }
+                currentFragment = trendsFragment;
                 break;
             case 1:
                 if (collectFragment == null) {
                     collectFragment = CollectFragment.newInstance();
                     ft.add(R.id.homepage_content, collectFragment);
+                    ft.commit();
                 } else {
                     ft.show(collectFragment);
+                    ft.commit();
                 }
+                currentFragment = collectFragment;
                 break;
         }
     }
 
     private void hideFragment(FragmentTransaction ft) {
-        if (trendsFragment != null) {
-            ft.hide(trendsFragment);
-        }
-        if (collectFragment != null) {
-            ft.hide(collectFragment);
+        if (ft != null) {
+            if (currentFragment != null) {
+                ft.hide(currentFragment);
+            }
         }
     }
 
@@ -198,4 +206,8 @@ public class HomePageFragment extends BaseFragment implements HomePageView {
         this.RCmsg = RCmsg;
     }
 
+    @Override       //这里是实现了自动更新
+    public void onResume() {
+        super.onResume();
+    }
 }

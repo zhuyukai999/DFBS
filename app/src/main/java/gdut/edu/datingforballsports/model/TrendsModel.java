@@ -40,20 +40,19 @@ public class TrendsModel implements Model_ {
                     if (TextUtils.isEmpty(responseData)) {
                         msg = "ERROR";
                         listener.onFails(msg);
+                        return;
                     }
                     Gson gson = new Gson();
-                    Post post = new Post();
+                    Post post;
                     ArrayList<Post> postList = new ArrayList<>();
                     try {
                         JSONArray jsonArray = new JSONArray(responseData);
                         for (int i = 0; i < jsonArray.length(); i++) {
-//                          将Json数组中的元素，拿出来转换成Json对象
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-//                          将Json对象转换成实体对象，并加入数组
                             post = gson.fromJson(String.valueOf(jsonObject), Post.class);
                             postList.add(post);
-                            listener.onSuccess(postList, msg);
                         }
+                        listener.onSuccess(postList, "获取成功");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

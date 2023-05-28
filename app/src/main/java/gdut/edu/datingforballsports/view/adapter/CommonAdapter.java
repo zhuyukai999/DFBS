@@ -90,7 +90,7 @@ public class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHolder> {
     public void changeAll(List<T> list) {
         mList.removeAll(list);
         mList.addAll(list);
-        notifyAll();
+        notifyDataSetChanged();
     }
 }
 

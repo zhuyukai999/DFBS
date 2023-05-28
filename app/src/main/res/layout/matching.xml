@@ -19,13 +19,13 @@
             android:src="@drawable/add"
             android:adjustViewBounds="true" />
     </LinearLayout>
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/matching_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"/>
 
-    </LinearLayout>
 <!--    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/matching_viewpager"
         android:layout_width="match_parent"

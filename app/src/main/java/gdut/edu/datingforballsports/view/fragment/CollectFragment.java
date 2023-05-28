@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.presenter.CollectPresenter;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.CollectView;
+import gdut.edu.datingforballsports.view.activity.OtherHomePageActivity;
 import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
@@ -37,8 +40,10 @@ public class CollectFragment extends BaseFragment implements CollectView {
     private CommonAdapter<Post> mCommonAdapter;
     private Intent intent;
     private int userId = -1;
+    private int otherUserId = -1;
     private String token;
     private String RCmsg;
+    private Gson gson;
     public Handler mHandler;
 
     public CollectFragment() {
@@ -52,6 +57,7 @@ public class CollectFragment extends BaseFragment implements CollectView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("CollectFragment1nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -83,8 +89,10 @@ public class CollectFragment extends BaseFragment implements CollectView {
         this.cPresenter = new CollectPresenter(this);
         intent = this.getActivity().getIntent();
         userId = intent.getIntExtra("userId", -1);
+        otherUserId = intent.getIntExtra("otherUserId", -1);
         token = intent.getStringExtra("token");
-        cPresenter.getList(userId, token);
+        gson = new Gson();
+        cPresenter.getList(otherUserId == -1 ? userId : otherUserId, token);
     }
 
     private void setView() {
@@ -107,10 +115,22 @@ public class CollectFragment extends BaseFragment implements CollectView {
                 if (model.isIfLike()) {
                     viewHolder.setSelect(R.id.post_item_like_image, true);
                 }
+                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
+                    if(userId!=model.getPublisherId()){
+                        Intent intent = new Intent();
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("token", token);
+                        intent.putExtra("otherUserId", model.getPublisherId());
+                        intent.putExtra("otherUserName", model.getPublisherName());
+                        intent.putExtra("otherUserIcon", model.getPublisherLogo());
+                        viewHolder.jumpActivity(intent, OtherHomePageActivity.class);
+                    }
+                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_collect_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_collect_image);
                     model.setIfCollect(!model.isIfCollect());
                     if (model.isIfCollect()) {
+
                     }
                     viewHolder.setSelect(R.id.post_item_collect_image, model.isIfCollect());
                 });
@@ -119,7 +139,7 @@ public class CollectFragment extends BaseFragment implements CollectView {
                     model.setIfCollect(!model.isIfLike());
                     if (model.isIfLike()) {
                         model.setLikeNum(model.getLikeNum() + 1);
-                    }else {
+                    } else {
                         model.setLikeNum(model.getLikeNum() - 1);
                     }
                     viewHolder.setText(R.id.post_item_like_num, String.valueOf(model.getLikeNum()));
@@ -127,26 +147,23 @@ public class CollectFragment extends BaseFragment implements CollectView {
                 });
                 viewHolder.onItemClick(viewHolder.itemView, view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    intent.putExtra("postId", model.getId());
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_comment_image), view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    intent.putExtra("postId", model.getId());
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
 
-                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
-
-                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_report), view -> {
 
                 });

@@ -7,16 +7,27 @@ public class ReplyDetail {
     private int likeNum;
     private boolean ifLike;
     private String createTime;
-    private String commentId;
+    private int commentId;
 
     public ReplyDetail(String userName, String content) {
         this.userName = userName;
         this.content = content;
     }
 
+    public ReplyDetail(String userName, int publisherId, String content, int likeNum, boolean ifLike, String createTime, int commentId) {
+        this.userName = userName;
+        this.publisherId = publisherId;
+        this.content = content;
+        this.likeNum = likeNum;
+        this.ifLike = ifLike;
+        this.createTime = createTime;
+        this.commentId = commentId;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public String getUserName() {
         return userName;
     }
@@ -24,20 +35,23 @@ public class ReplyDetail {
     public void setPublisherId(int publisherId) {
         this.publisherId = publisherId;
     }
+
     public int getPublisherId() {
         return publisherId;
     }
 
-    public void setCommentId(String commentId) {
+    public void setCommentId(int commentId) {
         this.commentId = commentId;
     }
-    public String getCommentId() {
+
+    public int getCommentId() {
         return commentId;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
+
     public String getContent() {
         return content;
     }
@@ -61,7 +75,21 @@ public class ReplyDetail {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
     public String getCreateTime() {
         return createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ReplyDetail{" +
+                "userName='" + userName + '\'' +
+                ", publisherId=" + publisherId +
+                ", content='" + content + '\'' +
+                ", likeNum=" + likeNum +
+                ", ifLike=" + ifLike +
+                ", createTime='" + createTime + '\'' +
+                ", commentId=" + commentId +
+                '}';
     }
 }

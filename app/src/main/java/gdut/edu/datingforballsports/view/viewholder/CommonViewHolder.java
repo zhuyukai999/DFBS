@@ -90,13 +90,13 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public CommonViewHolder changeSelect(int viewId){
+    public CommonViewHolder changeSelect(int viewId) {
         View v = getView(viewId);
         v.setSelected(!v.isSelected());
         return this;
     }
 
-    public CommonViewHolder setSelect(int viewId,boolean sel){
+    public CommonViewHolder setSelect(int viewId, boolean sel) {
         View v = getView(viewId);
         v.setSelected(sel);
         return this;
@@ -112,8 +112,9 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public <T> void jumpActivity(Class<T> clazz) {
-        context.startActivity(new Intent(context, clazz));
+    public <T> void jumpActivity(Intent intent, Class<T> clazz) {
+        intent.setClass(context, clazz);
+        context.startActivity(intent);
     }
 
 }

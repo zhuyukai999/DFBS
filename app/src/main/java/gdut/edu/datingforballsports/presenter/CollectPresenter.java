@@ -13,7 +13,7 @@ import gdut.edu.datingforballsports.view.CollectView;
 import gdut.edu.datingforballsports.view.TrendsView;
 import gdut.edu.datingforballsports.view.View_;
 
-public class CollectPresenter extends BasePresenter{
+public class CollectPresenter extends BasePresenter {
     public CollectPresenter(CollectView CollectView) {
         this.model = new CollectModel();
         this.viewReference = new WeakReference<View_>(CollectView);
@@ -24,17 +24,17 @@ public class CollectPresenter extends BasePresenter{
             ThreadUtils.execute(new Runnable() {
                 @Override
                 public void run() {
-                    ((CollectModel) model).getCollectList(((CollectView) viewReference).getUserId(),
-                            ((CollectView) viewReference).getToken(), new CollectListener() {
+                    ((CollectModel) model).getCollectList(((CollectView) viewReference.get()).getUserId(),
+                            ((CollectView) viewReference.get()).getToken(), new CollectListener() {
 
                                 @Override
                                 public void onSuccess(List<Post> list, String msg) {
-
+                                    ((CollectView) viewReference.get()).onTrendsLoadSuccess(list, msg);
                                 }
 
                                 @Override
                                 public void onFails(String msg) {
-
+                                    ((CollectView) viewReference.get()).onLoadFail(msg);
                                 }
                             });
                 }

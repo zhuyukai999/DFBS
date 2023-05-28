@@ -165,7 +165,8 @@ public class GlideEngine implements ImageEngine {
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        if (imageView.getTag().equals(url)) {
+                        System.out.println("url:" + url);
+                        if (url.equals(imageView.getTag())) {
                             imageView.setImageDrawable(resource);
                         }
                         return;
@@ -188,9 +189,7 @@ public class GlideEngine implements ImageEngine {
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        if (imageView.getTag().equals(url)) {
-                            imageView.setImageDrawable(resource);
-                        }
+                        imageView.setImageDrawable(resource);
                         return;
                     }
 

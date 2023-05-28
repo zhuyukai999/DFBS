@@ -80,22 +80,23 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         } else {
             groupHolder = (GroupHolder) convertView.getTag();
         }
-        GlideEngine.createGlideEngine().loadNetImage(context,commentBeanList.get(groupPosition).getPublisherLogo(),groupHolder.logo);
+        GlideEngine.createGlideEngine().loadNetImage(context, commentBeanList.get(groupPosition).getPublisherLogo(), groupHolder.logo);
         groupHolder.name.setText(commentBeanList.get(groupPosition).getPublisherName());
         groupHolder.content.setText(commentBeanList.get(groupPosition).getContent());
         groupHolder.time.setText(commentBeanList.get(groupPosition).getCreateTime());
         int likeNum = commentBeanList.get(groupPosition).getLikeNum();
-        groupHolder.likeNum.setText(likeNum);
+        groupHolder.likeNum.setText(String.valueOf(likeNum));
+        groupHolder.commentNum.setText(String.valueOf(commentBeanList.get(groupPosition).getCommentNum()));
         groupHolder.likeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean ifLike = commentBeanList.get(groupPosition).isIfLike();
                 commentBeanList.get(groupPosition).setIfLike(!ifLike);
                 if (ifLike) {
-                    groupHolder.likeNum.setText(likeNum - 1);
+                    groupHolder.likeNum.setText(String.valueOf(likeNum - 1));
                     groupHolder.likeIcon.setSelected(false);
                 } else {
-                    groupHolder.likeNum.setText(likeNum + 1);
+                    groupHolder.likeNum.setText(String.valueOf(likeNum + 1));
                     groupHolder.likeIcon.setSelected(true);
                 }
             }
@@ -122,20 +123,21 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         if (!TextUtils.isEmpty(replyUser)) {
             childHolder.name.setText(replyUser + ":");
         }
+        System.out.println("commentBeanList.get(groupPosition).getReplyList().get(childPosition):" + commentBeanList.get(groupPosition).getReplyList().get(childPosition));
         childHolder.content.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getContent());
         childHolder.createTime.setText(commentBeanList.get(groupPosition).getReplyList().get(childPosition).getCreateTime());
         int likeNum = commentBeanList.get(groupPosition).getReplyList().get(childPosition).getLikeNum();
-        childHolder.likeNum.setText(likeNum);
+        childHolder.likeNum.setText(String.valueOf(likeNum));
         childHolder.likeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean ifLike = commentBeanList.get(groupPosition).getReplyList().get(childPosition).isIfLike();
                 commentBeanList.get(groupPosition).getReplyList().get(childPosition).setIfLike(!ifLike);
                 if (ifLike) {
-                    childHolder.likeNum.setText(likeNum - 1);
+                    childHolder.likeNum.setText(String.valueOf(likeNum - 1));
                     childHolder.likeIcon.setSelected(false);
                 } else {
-                    childHolder.likeNum.setText(likeNum + 1);
+                    childHolder.likeNum.setText(String.valueOf(likeNum + 1));
                     childHolder.likeIcon.setSelected(true);
                 }
             }
@@ -170,11 +172,11 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         private ImageView likeIcon;
 
         public ChildHolder(View view) {
-            name = (TextView) view.findViewById(R.id.reply_item_user);
-            content = (TextView) view.findViewById(R.id.reply_item_content);
-            createTime = (TextView) view.findViewById(R.id.comment_item_time);
+            name = view.findViewById(R.id.reply_item_user);
+            content = view.findViewById(R.id.reply_item_content);
+            createTime = view.findViewById(R.id.reply_item_time);
             likeIcon = view.findViewById(R.id.forum_item_good_image);
-            likeNum = (TextView) view.findViewById(R.id.forum_item_good_num);
+            likeNum = view.findViewById(R.id.forum_item_good_num);
         }
     }
 

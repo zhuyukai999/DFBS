@@ -110,7 +110,7 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
             }
         });
         buttonClick(R.id.edit_post_button, view -> {
-            ePresenter.uploadPost(userId, token, postContent.getText().toString(), ballType.getText().toString(), city);
+            ePresenter.uploadPost(userId, token, postContent.getText().toString(), ballType.getText().toString(), "广州");
         });
     }
 

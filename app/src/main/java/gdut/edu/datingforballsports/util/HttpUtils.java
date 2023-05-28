@@ -127,6 +127,25 @@ public class HttpUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void sendHttpRequestPostWithTokenAndId(String path, String token, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(path)
+                .header("token", token)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void sendHttpRequestWithTokenAndId(String path, String json, String token, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder().add("userMessage", json).build();
+        Request request = new Request.Builder()
+                .url(path)
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
     public static void sendHttpRequestPostWithToken(String path, Post post, String token, Callback callback) {
         if (post != null) {
             OkHttpClient client = new OkHttpClient();

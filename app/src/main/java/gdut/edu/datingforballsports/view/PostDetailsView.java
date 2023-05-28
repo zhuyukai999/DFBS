@@ -8,5 +8,7 @@ public interface PostDetailsView extends View_{
 
     void onLoadSuccess(List<CommentDetail> list);
 
-    void onLoadFails(String RCmsg);
+    void onLoadFails(String msg_);
+
+    void onLoadSuccess(String msg_);
 }

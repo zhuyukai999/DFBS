@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.presenter.TrendsPresenter;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.TrendsView;
+import gdut.edu.datingforballsports.view.activity.ChatActivity;
+import gdut.edu.datingforballsports.view.activity.OtherHomePageActivity;
 import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
@@ -37,14 +41,16 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
     private CommonAdapter<Post> mCommonAdapter;
     private Intent intent;
     private int userId = -1;
+    private int otherUserId = -1;
     private String token;
     private String RCmsg;
     public Handler mHandler;
+    private Gson gson;
 
     public TrendsFragment() {
     }
 
-    public static TrendsFragment newInstance(){
+    public static TrendsFragment newInstance() {
         TrendsFragment fragment = new TrendsFragment();
         return fragment;
     }
@@ -52,6 +58,7 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("TrendsFragment1nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -62,7 +69,7 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
                         break;
                     case LOAD_SUCCEED:
                         Toast.makeText(getActivity(), "加载成功！", Toast.LENGTH_LONG).show();
-                        list = TextUtils.castList(message.obj,Post.class);
+                        list = TextUtils.castList(message.obj, Post.class);
                         setView();
                         break;
                 }
@@ -74,7 +81,7 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.trends_list,container,false);
+        view = inflater.inflate(R.layout.trends_list, container, false);
         setData();
         return view;
     }
@@ -83,8 +90,10 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
         this.tPresenter = new TrendsPresenter(this);
         intent = this.getActivity().getIntent();
         userId = intent.getIntExtra("userId", -1);
+        otherUserId = intent.getIntExtra("otherUserId", -1);
         token = intent.getStringExtra("token");
-        tPresenter.getList(userId, token);
+        gson = new Gson();
+        tPresenter.getList(otherUserId == -1 ? userId : otherUserId, token);
     }
 
     private void setView() {
@@ -94,10 +103,10 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
         mCommonAdapter = new CommonAdapter<>(list, new CommonAdapter.OnBindDataListener<Post>() {
             @Override
             public void onBindViewHolder(Post model, CommonViewHolder viewHolder, int type, int position) {
-                viewHolder.setImageResource(R.id.post_item_logo,model.getPublisherLogo());
-                viewHolder.setText(R.id.post_item_userName,model.getPublisherName());
-                viewHolder.setText(R.id.post_item_time,model.getCreateTime());
-                viewHolder.setText(R.id.post_item_content,model.getContent());
+                viewHolder.setImageResource(R.id.post_item_logo, model.getPublisherLogo());
+                viewHolder.setText(R.id.post_item_userName, model.getPublisherName());
+                viewHolder.setText(R.id.post_item_time, model.getCreateTime());
+                viewHolder.setText(R.id.post_item_content, model.getContent());
                 viewHolder.setText(R.id.post_item_comment_num, String.valueOf(model.getCommentNum()));
                 viewHolder.setText(R.id.post_item_like_num, String.valueOf(model.getLikeNum()));
                 if (model.isIfCollect()) {
@@ -106,6 +115,18 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
                 if (model.isIfLike()) {
                     viewHolder.setSelect(R.id.post_item_like_image, true);
                 }
+                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
+                    if(userId!=model.getPublisherId()){
+                        Intent intent = new Intent();
+                        System.out.println("model: " + model);
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("token", token);
+                        intent.putExtra("otherUserId", model.getPublisherId());
+                        intent.putExtra("otherUserName", model.getPublisherName());
+                        intent.putExtra("otherUserIcon", model.getPublisherLogo());
+                        viewHolder.jumpActivity(intent, OtherHomePageActivity.class);
+                    }
+                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_collect_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_collect_image);
                     model.setIfCollect(!model.isIfCollect());
@@ -117,39 +138,37 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
                     viewHolder.changeSelect(R.id.post_item_like_image);
                     model.setIfCollect(!model.isIfLike());
                     if (model.isIfLike()) {
-                        model.setLikeNum(model.getLikeNum() + 1);
-                    }else {
                         model.setLikeNum(model.getLikeNum() - 1);
+                        viewHolder.setSelect(R.id.post_item_collect_image, false);
+                    } else {
+                        model.setLikeNum(model.getLikeNum() + 1);
+                        viewHolder.setSelect(R.id.post_item_collect_image, true);
                     }
                     viewHolder.setText(R.id.post_item_like_num, String.valueOf(model.getLikeNum()));
                     viewHolder.setSelect(R.id.post_item_like_image, model.isIfLike());
                 });
                 viewHolder.onItemClick(viewHolder.itemView, view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_comment_image), view -> {
                     Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("post", model);
-                    intent.putExtra("bundle", bundle);
+                    String post = gson.toJson(model);
+                    intent.putExtra("post", post);
                     intent.putExtra("userId", userId);
                     intent.putExtra("token", token);
-                    viewHolder.jumpActivity(PostDetailsActivity.class);
+                    viewHolder.jumpActivity(intent, PostDetailsActivity.class);
                 });
 
-                viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
-
-                });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_report), view -> {
 
                 });
             }
+
             @Override
             public int getLayoutId(int type) {
                 return R.layout.a_post_item;
@@ -180,6 +199,8 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
 
     @Override
     public void onLoadFail(String RCmsg) {
-
+        Message msg = Message.obtain();
+        msg.what = LOAD_FAILED;
+        mHandler.sendMessage(msg);
     }
 }

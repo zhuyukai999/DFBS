@@ -32,6 +32,7 @@ import gdut.edu.datingforballsports.view.adapter.MyFragmentPagerAdapter;
 import gdut.edu.datingforballsports.view.fragment.BlankFragment;
 import gdut.edu.datingforballsports.view.fragment.ForumListFragment;
 import gdut.edu.datingforballsports.view.fragment.HomePageFragment;
+import gdut.edu.datingforballsports.view.fragment.MatchingFragment;
 import gdut.edu.datingforballsports.view.fragment.MessageAndFriendFragment;
 
 
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(MessageAndFriendFragment.newInstance());//"信息"
         fragments.add(ForumListFragment.newInstance());
-        fragments.add(ForumListFragment.newInstance());//"匹配"
+        fragments.add(MatchingFragment.newInstance());//"匹配"
         fragments.add(HomePageFragment.newInstance());
         MyFragmentPagerAdapter pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewPager.setAdapter(pagerAdapter);
@@ -141,7 +142,7 @@ public class MainActivity extends BaseActivity {
     private void initSocket() {
         intent.putExtra("userId", userId);
         intent.putExtra("uri", "http://192.168.126.1:8080/websocket/" + userId);
-        intent = new Intent(this, SocketService.class);
+        intent.setClass(this, SocketService.class);
         startService(intent);
     }
 

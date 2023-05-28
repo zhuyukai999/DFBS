@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +39,7 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     private FragmentTransaction ft;
     private ChatMessageFragment chatMessageFragment;
     private FriendFragment friendFragment;
+    private Fragment currentFragment;
     private Intent intent;
     private int userId = -1;
     private String token;
@@ -56,6 +58,7 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("MessageAndFriendFragmentinnnnnnnnnnnnnnnnnnnnnnn");
         this.savedInstanceState = savedInstanceState;
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -90,11 +93,11 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
         });
 
         fm = getChildFragmentManager();
-        ft = fm.beginTransaction();
         setTabSelection(0);
     }
 
     private void setTabSelection(int index) {
+        ft = fm.beginTransaction();
         hideFragment(ft);
         switch (index) {
             case 0:
@@ -104,7 +107,9 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
                     ft.commit();
                 } else {
                     ft.show(chatMessageFragment);
+                    ft.commit();
                 }
+                currentFragment = chatMessageFragment;
                 break;
             case 1:
                 if (savedInstanceState == null && friendFragment == null) {
@@ -113,17 +118,18 @@ public class MessageAndFriendFragment extends BaseFragment implements MessageVie
                     ft.commit();
                 } else {
                     ft.show(friendFragment);
+                    ft.commit();
                 }
+                currentFragment = friendFragment;
                 break;
         }
     }
 
     private void hideFragment(FragmentTransaction ft) {
-        if (chatMessageFragment != null) {
-            ft.hide(chatMessageFragment);
-        }
-        if (friendFragment != null) {
-            ft.hide(friendFragment);
+        if (ft != null) {
+            if (currentFragment != null) {
+                ft.hide(currentFragment);
+            }
         }
     }
 

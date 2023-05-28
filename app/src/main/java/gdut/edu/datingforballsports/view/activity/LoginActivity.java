@@ -45,7 +45,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
                         break;
                     case LOGIN_SUCCEED:
                         Toast.makeText(getApplicationContext(), "登陆成功！", Toast.LENGTH_LONG).show();
-                        Intent intent = getIntent();
+                        intent = getIntent();
                         // FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         //transaction.replace(R.id.main_frame_layout, f1);
                         // transaction.add(R.id.main_frame_layout, f4);

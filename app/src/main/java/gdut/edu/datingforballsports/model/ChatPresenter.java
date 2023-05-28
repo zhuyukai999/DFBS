@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -24,10 +23,8 @@ import gdut.edu.datingforballsports.domain.MessageBean;
 import gdut.edu.datingforballsports.presenter.BasePresenter;
 import gdut.edu.datingforballsports.util.JWebSocketClient;
 import gdut.edu.datingforballsports.util.ThreadUtils;
-import gdut.edu.datingforballsports.view.ChatMessageView;
 import gdut.edu.datingforballsports.view.ChatView;
 import gdut.edu.datingforballsports.view.Service.SocketService;
-import gdut.edu.datingforballsports.view.TrendsView;
 import gdut.edu.datingforballsports.view.View_;
 
 public class ChatPresenter extends BasePresenter {
@@ -67,7 +64,7 @@ public class ChatPresenter extends BasePresenter {
             @Override
             public void run() {
                 List<ChatMessage> chatMessageList = messageDao.getChatMessage(otherId);
-                ((TrendsView) viewReference.get()).onTrendsLoadSuccess(chatMessageList, "获取信息成功");
+                ((ChatView) viewReference.get()).onChatMsgLoadSuccess(chatMessageList, "获取信息成功");
             }
         });
     }
