@@ -1,4 +1,4 @@
-package gdut.edu.datingforballsports.model;
+package gdut.edu.datingforballsports.presenter;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +20,7 @@ import gdut.edu.datingforballsports.dao.Impl.MessageDaoImpl;
 import gdut.edu.datingforballsports.dao.MessageDao;
 import gdut.edu.datingforballsports.domain.ChatMessage;
 import gdut.edu.datingforballsports.domain.MessageBean;
+import gdut.edu.datingforballsports.model.ChatModel;
 import gdut.edu.datingforballsports.presenter.BasePresenter;
 import gdut.edu.datingforballsports.util.JWebSocketClient;
 import gdut.edu.datingforballsports.util.ThreadUtils;
@@ -81,16 +82,6 @@ public class ChatPresenter extends BasePresenter {
             intent.setAction("gdut.edu.datingforballsports.servicecallback.chatContent");
             intent.putExtra("bundle", bundle);
             context.sendBroadcast(intent);
-            JSONArray jsonArray = new JSONArray();
-            try {
-                jsonArray.put(0, 1);
-                String json = gson.toJson(chatMessage);
-                jsonArray.put(1, json);
-                jsonArray.put(2, otherId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            client.send(jsonArray.toString());
         }
     }
 }

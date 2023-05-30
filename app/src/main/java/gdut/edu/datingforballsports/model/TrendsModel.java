@@ -63,4 +63,22 @@ public class TrendsModel implements Model_ {
             listener.onFails(msg);
         }
     }
+
+    public void collectPost(int userId, String token, int postId) {
+        String path = "http://192.168.126.1:8080/forum/collectPost/" + userId;
+        Map<String, String> map = new HashMap<>();
+        map.put("postId", String.valueOf(postId));
+        HttpUtils.sendHttpRequestPostWithTokenAndId(path, map, token, new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("collectPostresponse:"+response.body());
+            }
+        });
+    }
 }

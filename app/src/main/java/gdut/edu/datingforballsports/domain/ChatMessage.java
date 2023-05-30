@@ -20,6 +20,7 @@ public class ChatMessage implements Serializable {
     public ChatMessage() {
     }
 
+    //chat
     public ChatMessage(int otherOrChatRoomId, String content, String publishTime, int type, int publisherId, String otherOrChatRoomName, String publisherName) {
         this.otherOrChatRoomId = otherOrChatRoomId;
         this.content = content;

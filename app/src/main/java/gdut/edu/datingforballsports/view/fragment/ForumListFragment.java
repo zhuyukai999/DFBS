@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -129,6 +130,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                 viewHolder.setText(R.id.post_item_content, model.getContent());
                 viewHolder.setText(R.id.post_item_comment_num, String.valueOf(model.getCommentNum()));
                 viewHolder.setText(R.id.post_item_like_num, String.valueOf(model.getLikeNum()));
+                System.out.println("model.isIfCollect():" + model.isIfCollect());
                 if (model.isIfCollect()) {
                     viewHolder.setSelect(R.id.post_item_collect_image, true);
                 }
@@ -136,7 +138,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                     viewHolder.setSelect(R.id.post_item_like_image, true);
                 }
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_logo), view -> {
-                    if(userId!=model.getPublisherId()){
+                    if (userId != model.getPublisherId()) {
                         Intent intent = new Intent();
                         intent.putExtra("userId", userId);
                         intent.putExtra("token", token);
@@ -149,17 +151,18 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_collect_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_collect_image);
                     model.setIfCollect(!model.isIfCollect());
+                    System.out.println(userId + "|" + model.getId());
                     if (model.isIfCollect()) {
+                        fPresenter.collectPost(userId, token, model.getId());
                     }
-                    viewHolder.setSelect(R.id.post_item_collect_image, model.isIfCollect());
                 });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_like_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_like_image);
                     model.setIfCollect(!model.isIfLike());
                     if (model.isIfLike()) {
-                        model.setLikeNum(model.getLikeNum() + 1);
-                    } else {
                         model.setLikeNum(model.getLikeNum() - 1);
+                    } else {
+                        model.setLikeNum(model.getLikeNum() + 1);
                     }
                     viewHolder.setText(R.id.post_item_like_num, String.valueOf(model.getLikeNum()));
                     viewHolder.setSelect(R.id.post_item_like_image, model.isIfLike());
@@ -204,7 +207,9 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (city_buffer == null) {
-                        GPSUtils.getInstance().getProvince(view.getContext(), new Callback() {
+                        city = "广州";
+                        city_buffer = city;
+                        /*GPSUtils.getInstance().getProvince(view.getContext(), new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
                             }
@@ -221,7 +226,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                                     e.printStackTrace();
                                 }
                             }
-                        });
+                        });*/
                     } else {
                         city = city_buffer;
                     }
@@ -230,7 +235,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
                 }
             }
         });
-        buttonClick(R.id.screen_post_button, view -> {
+        buttonClick((Button) view.findViewById(R.id.screen_post_button), view -> {
             ballType = getActivity().findViewById(R.id.forum_list_content).getContext().toString();
             fPresenter.getList(userId, token, ballType, city);
         });
@@ -249,6 +254,7 @@ public class ForumListFragment extends BaseFragment implements ForumListView {
 
     @Override
     public void onForumListLoadSuccess(Object list, String RCmsg) {
+        System.out.println("list: " + list);
         Message msg = Message.obtain();
         msg.what = LOAD_SUCCEED; // 消息标识
         msg.obj = list;

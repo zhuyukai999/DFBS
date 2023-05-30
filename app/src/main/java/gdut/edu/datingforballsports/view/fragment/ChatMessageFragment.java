@@ -1,11 +1,14 @@
 package gdut.edu.datingforballsports.view.fragment;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +39,7 @@ import gdut.edu.datingforballsports.domain.User;
 import gdut.edu.datingforballsports.presenter.ChatMessagePresenter;
 import gdut.edu.datingforballsports.util.TextUtils;
 import gdut.edu.datingforballsports.view.ChatMessageView;
+import gdut.edu.datingforballsports.view.Service.SocketService;
 import gdut.edu.datingforballsports.view.activity.ChatActivity;
 import gdut.edu.datingforballsports.view.activity.PostDetailsActivity;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
@@ -59,6 +64,9 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
     public Handler mHandler;
     private Gson gson;
     MessageDao messageDao;
+    private ServiceConnection serviceConnection;
+    private SocketService.JWebSocketClientBinder binder;
+    private SocketService socketService;
 
     public ChatMessageFragment() {
     }
@@ -129,6 +137,19 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
         userId = intent.getIntExtra("userId", -1);
         token = intent.getStringExtra("token");
         cPresenter.getList();
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                binder = (SocketService.JWebSocketClientBinder) service;
+                socketService = binder.getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                binder = null;
+            }
+        };
+        doRegisterReceiver();
     }
 
     private void setView() {
@@ -169,6 +190,19 @@ public class ChatMessageFragment extends BaseFragment implements ChatMessageView
                         viewHolder.setText(R.id.message_item_friend_content, model.getCoverContent());
                         viewHolder.onItemClick((View) viewHolder.getView(R.id.button_require_friend_accept), view -> {
                             mCommonAdapter.remove(viewHolder.getLayoutPosition());
+                            try {
+                                JSONArray jsonArray = new JSONArray();
+                                MessageBean messageBean = new MessageBean(4, model.getOtherOrChatRoomId());
+                                String json = gson.toJson(messageBean);
+                                JSONObject agree = new Gson().fromJson(json, JSONObject.class);
+                                jsonArray.put(0, "agree");
+                                jsonArray.put(1, agree);
+                                String msg = gson.toJson(jsonArray);
+                                socketService.sendMsg(msg);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         });
 
                         viewHolder.onItemClick((View) viewHolder.getView(R.id.button_require_friend_refuse), view -> {

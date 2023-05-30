@@ -142,7 +142,6 @@ public class OtherHomePageActivity extends BaseActivity implements OtherHomePage
             dialog.setMessage("确认添加好友");
             dialog.setCancelable(false);//设置对话框是否可以取消
             dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {//确定按钮的点击事件
-
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     try {
@@ -216,4 +215,13 @@ public class OtherHomePageActivity extends BaseActivity implements OtherHomePage
         }
     }
 
+    @Override
+    public void onSendSuccess() {
+
+    }
+
+    @Override
+    public void onSendFails(String msg) {
+
+    }
 }

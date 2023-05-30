@@ -83,7 +83,9 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (city_buffer == null) {
-                        GPSUtils.getInstance().getProvince(getApplicationContext(), new Callback() {
+                        city = "广州";
+                        city_buffer = city;
+                        /*GPSUtils.getInstance().getProvince(getApplicationContext(), new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
                             }
@@ -100,7 +102,7 @@ public class EditPostActivity extends BaseActivity implements EditPostView {
                                     e.printStackTrace();
                                 }
                             }
-                        });
+                        });*/
                     } else {
                         city = city_buffer;
                     }

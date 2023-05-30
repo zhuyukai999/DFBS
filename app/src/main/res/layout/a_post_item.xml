@@ -87,7 +87,7 @@
             android:id="@+id/post_item_collect_image"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:src="@drawable/collect_icon"
+            android:src="@drawable/collect_button"
             android:layout_marginLeft="20dp"
             android:adjustViewBounds="true" />
 

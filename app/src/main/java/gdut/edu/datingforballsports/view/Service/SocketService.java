@@ -79,9 +79,7 @@ public class SocketService extends Service {
                     try {
                         JSONArray jsonArray = new JSONArray(message);
                         String type = ((JSONObject) (jsonArray.get(0))).getString("type");
-                        if (type.equals("matching")) {
-
-                        } else if (type.equals("chat")) {
+                        if (type.equals("chat")) {
                             JSONObject jsonObject = new JSONObject((String) jsonArray.get(1));
                             chatMessage = gson.fromJson(String.valueOf(jsonObject), ChatMessage.class);
                             switch (chatMessage.getType()) {
@@ -112,6 +110,15 @@ public class SocketService extends Service {
                             intent = new Intent();
                             intent.setAction("gdut.edu.datingforballsports.servicecallback.chatContent");
                             intent.putExtra("bundle", bundle);
+                            sendBroadcast(intent);
+                        } else if (type.equals("matching")) {
+                            Bundle bundle = new Bundle();
+                            /*JSONObject jsonObject = jsonArray.getJSONObject(1);
+                            MessageBean messageBean = gson.fromJson(String.valueOf(jsonObject), MessageBean.class);*/
+                            bundle.putSerializable("messageBean", jsonArray.getString(1));
+                            intent = new Intent();
+                            intent.setAction("gdut.edu.datingforballsports.servicecallback.matchingContent");
+
                             sendBroadcast(intent);
                         }
 

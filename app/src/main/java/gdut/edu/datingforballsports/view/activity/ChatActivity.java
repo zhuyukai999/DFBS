@@ -44,16 +44,11 @@ import java.util.List;
 
 import gdut.edu.datingforballsports.R;
 import gdut.edu.datingforballsports.domain.ChatMessage;
-import gdut.edu.datingforballsports.domain.CommentDetail;
 import gdut.edu.datingforballsports.domain.MessageBean;
-import gdut.edu.datingforballsports.domain.Post;
-import gdut.edu.datingforballsports.model.ChatPresenter;
-import gdut.edu.datingforballsports.util.JWebSocketClient;
+import gdut.edu.datingforballsports.presenter.ChatPresenter;
 import gdut.edu.datingforballsports.view.ChatView;
 import gdut.edu.datingforballsports.view.Service.SocketService;
-import gdut.edu.datingforballsports.view.adapter.CommentExpandAdapter;
 import gdut.edu.datingforballsports.view.adapter.CommonAdapter;
-import gdut.edu.datingforballsports.view.fragment.ChatMessageFragment;
 import gdut.edu.datingforballsports.view.viewholder.CommonViewHolder;
 
 public class ChatActivity extends BaseActivity implements ChatView {
@@ -105,9 +100,7 @@ public class ChatActivity extends BaseActivity implements ChatView {
                         break;
                     case LOAD_CHATMESSAGE_SUCCEED:
                         ChatMessage chatMessage = (ChatMessage) message.obj;
-                        if (chatMessage.getType() == 1 && chatMessage.getOtherOrChatRoomId() == otherId) {
-                            mCommonAdapter.insert(chatMessage, list.size());
-                        }
+                        mCommonAdapter.insert(chatMessage, list.size());
                         break;
                 }
             }
@@ -124,9 +117,9 @@ public class ChatActivity extends BaseActivity implements ChatView {
         String bean = intent.getStringExtra("messageBean");
         System.out.println("bean:" + bean);
         messageBean = gson.fromJson(bean, MessageBean.class);
-        otherId = this.messageBean.getOtherOrChatRoomId();
-        otherName = this.messageBean.getOtherOrChatRoomName();
-        otherIcon = this.messageBean.getOtherOrChatRoomLogo();
+        otherId = messageBean.getOtherOrChatRoomId();
+        otherName = messageBean.getOtherOrChatRoomName();
+        otherIcon = messageBean.getOtherOrChatRoomLogo();
         sharedPreferences = getApplicationContext().getSharedPreferences("user" + userId, MODE_PRIVATE);
         userName = sharedPreferences.getString("userName", "~~~");
         icon = sharedPreferences.getString("icon", null);
@@ -239,15 +232,13 @@ public class ChatActivity extends BaseActivity implements ChatView {
                     try {
                         Date date = new Date();
                         JSONArray jsonArray = new JSONArray();
-                        JSONObject type = new JSONObject();
-                        type.put("type", "chat");
                         ChatMessage chatMessage = new ChatMessage(userId, commentContent, sdf.format(date), 1, userId, userName, userName);
                         mCommonAdapter.insert(chatMessage, list.size());
                         cPresenter.storeMessage(chatMessage, otherId);
                         String json = gson.toJson(chatMessage);
-                        JSONObject chat = new Gson().fromJson(json, JSONObject.class);
-                        jsonArray.put(type);
-                        jsonArray.put(chat);
+                        JSONObject chat = gson.fromJson(json, JSONObject.class);
+                        jsonArray.put(0, "chat");
+                        jsonArray.put(1, json);
                         String msg = gson.toJson(jsonArray);
                         socketService.sendMsg(msg);
                     } catch (JSONException e) {
@@ -302,10 +293,12 @@ public class ChatActivity extends BaseActivity implements ChatView {
         @Override
         public void onReceive(Context context, Intent intent) {
             ChatMessage chatMessage = (ChatMessage) intent.getSerializableExtra("chatMessage");
-            Message msg = Message.obtain();
-            msg.what = LOAD_CHATMESSAGE_SUCCEED; // 消息标识
-            msg.obj = chatMessage;
-            mHandler.sendMessage(msg);
+            if (chatMessage.getType() == 1 && chatMessage.getOtherOrChatRoomId() == otherId) {
+                Message msg = Message.obtain();
+                msg.what = LOAD_CHATMESSAGE_SUCCEED; // 消息标识
+                msg.obj = chatMessage;
+                mHandler.sendMessage(msg);
+            }
         }
     }
 

@@ -40,4 +40,15 @@ public class TrendsPresenter extends BasePresenter {
             });
         }
     }
+
+    public void collectPost(int userId, String token, int id) {
+        if (this.model != null && this.viewReference != null && this.viewReference.get() != null) {
+            ThreadUtils.execute(new Runnable() {
+                @Override
+                public void run() {
+                    ((TrendsModel) model).collectPost(userId, token,id);
+                }
+            });
+        }
+    }
 }

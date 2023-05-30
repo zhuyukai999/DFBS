@@ -1,6 +1,8 @@
 package gdut.edu.datingforballsports.domain;
 
-public class MessageBean {
+import java.io.Serializable;
+
+public class MessageBean implements Serializable {
     private int id;
     private int type;
     private int otherOrChatRoomId;
@@ -12,6 +14,11 @@ public class MessageBean {
     private boolean read;
 
     public MessageBean() {
+    }
+
+    public MessageBean(int type, int otherOrChatRoomId) {
+        this.type = type;
+        this.otherOrChatRoomId = otherOrChatRoomId;
     }
 
     public MessageBean(int type, int otherOrChatRoomId, String otherOrChatRoomName, String otherOrChatRoomLogo, String publishTime, String coverContent) {

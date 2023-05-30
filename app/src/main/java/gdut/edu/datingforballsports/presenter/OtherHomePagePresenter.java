@@ -4,20 +4,19 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import gdut.edu.datingforballsports.domain.Friend;
-import gdut.edu.datingforballsports.domain.Post;
 import gdut.edu.datingforballsports.model.FriendModel;
 import gdut.edu.datingforballsports.model.Listener.FriendListener;
-import gdut.edu.datingforballsports.model.Listener.TrendsListener;
-import gdut.edu.datingforballsports.model.TrendsModel;
+import gdut.edu.datingforballsports.model.Listener.OtherHomePageListener;
+import gdut.edu.datingforballsports.model.OtherHomePageModel;
 import gdut.edu.datingforballsports.util.ThreadUtils;
 import gdut.edu.datingforballsports.view.FriendView;
-import gdut.edu.datingforballsports.view.TrendsView;
 import gdut.edu.datingforballsports.view.View_;
+import gdut.edu.datingforballsports.view.viewholder.OtherHomePageView;
 
-public class FriendPresenter extends BasePresenter {
-    public FriendPresenter(FriendView friendView) {
-        this.model = new FriendModel();
-        this.viewReference = new WeakReference<View_>(friendView);
+public class OtherHomePagePresenter extends BasePresenter {
+    public OtherHomePagePresenter(OtherHomePageView otherHomePageView) {
+        this.model = new OtherHomePageModel();
+        this.viewReference = new WeakReference<View_>(otherHomePageView);
     }
 
     public void getList(int userId, String token) {
@@ -25,21 +24,18 @@ public class FriendPresenter extends BasePresenter {
             ThreadUtils.execute(new Runnable() {
                 @Override
                 public void run() {
-                    ((FriendModel) model).getFriendList(userId, token, new FriendListener() {
-
+                    ((OtherHomePageModel) model).sendAddFriendRequest(userId, token, new OtherHomePageListener() {
                         @Override
-                        public void onSuccess(List<Friend> list) {
-                            ((FriendView) viewReference.get()).onLoadSuccess(list);
+                        public void onSuccess() {
                         }
 
                         @Override
                         public void onFails(String msg) {
-                            ((FriendView) viewReference.get()).onLoadFail(msg);
+
                         }
                     });
                 }
             });
         }
     }
-
 }

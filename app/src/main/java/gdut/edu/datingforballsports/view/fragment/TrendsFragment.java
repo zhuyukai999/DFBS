@@ -131,8 +131,8 @@ public class TrendsFragment extends BaseFragment implements TrendsView {
                     viewHolder.changeSelect(R.id.post_item_collect_image);
                     model.setIfCollect(!model.isIfCollect());
                     if (model.isIfCollect()) {
+                        tPresenter.collectPost(userId,token,model.getId());
                     }
-                    viewHolder.setSelect(R.id.post_item_collect_image, model.isIfCollect());
                 });
                 viewHolder.onItemClick((View) viewHolder.getView(R.id.post_item_like_image), view -> {
                     viewHolder.changeSelect(R.id.post_item_like_image);

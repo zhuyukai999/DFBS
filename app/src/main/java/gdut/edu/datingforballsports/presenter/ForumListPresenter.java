@@ -60,4 +60,15 @@ public class ForumListPresenter extends BasePresenter {
             });
         }
     }
+
+    public void collectPost(int userId, String token, int postId) {
+        if (this.model != null && this.viewReference != null && this.viewReference.get() != null) {
+            ThreadUtils.execute(new Runnable() {
+                @Override
+                public void run() {
+                    ((ForumListModel) model).collectPost(userId, token,postId);
+                }
+            });
+        }
+    }
 }
